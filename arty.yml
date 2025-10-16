@@ -1,0 +1,13 @@
+name: "leaf.sh"
+version: "1.0.0"
+description: "Beautiful documentation site generator for arty.sh projects"
+author: ""
+license: "MIT"
+
+# Entry point script
+main: "leaf.sh"
+
+# Available commands/scripts
+scripts:
+  generate: "bash leaf.sh"
+  docs: "bash leaf.sh ."
