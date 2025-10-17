@@ -689,7 +689,7 @@ EOFDOCS
 ' ' ')
 		sed -i "s|%%ICON%%|${icon_escaped}|g" "${OUTPUT_DIR}/index.html"
 	else
-		sed -i "s|%%ICON%%|<svg class=\\"w-full h-full\\" fill=\\"currentColor\\" viewBox=\\"0 0 24 24\\"><path d=\\"M13 2L3 14h9l-1 8 10-12h-9l1-8z\\"/></svg>|g" "${OUTPUT_DIR}/index.html"
+		sed -i "s|%%ICON%%|<svg class=\"w-full h-full\" fill=\"currentColor\" viewBox=\"0 0 24 24\"><path d=\"M13 2L3 14h9l-1 8 10-12h-9l1-8z\"/></svg>|g" "${OUTPUT_DIR}/index.html"
 	fi
 
 	# Generate source files HTML
@@ -700,13 +700,13 @@ EOFDOCS
 		local rel="${file#${PROJECT_DIR}/}"
 		local lang=$(detect_language "$file")
 		local code=$(cat "$file" | sed 's/&/\\&amp;/g; s/</\\&lt;/g; s/>/\\&gt;/g')
-		src_html+="<div class=\\"bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden\\">"
-		src_html+="<div class=\\"bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4\\">"
-		src_html+="<h3 class=\\"text-xl font-semibold text-white\\">${name}</h3>"
-		src_html+="<p class=\\"text-blue-100 text-sm\\">${rel}</p></div>"
-		src_html+="<div class=\\"p-6\\"><pre><code class=\\"language-${lang}\\">${code}</code></pre></div></div>"
+		src_html+="<div class=\"bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden\">"
+		src_html+="<div class=\"bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4\">"
+		src_html+="<h3 class=\"text-xl font-semibold text-white\">${name}</h3>"
+		src_html+="<p class=\"text-blue-100 text-sm\">${rel}</p></div>"
+		src_html+="<div class=\"p-6\"><pre><code class=\"language-${lang}\">${code}</code></pre></div></div>"
 	done
-	[[ -z "$src_html" ]] && src_html="<p class=\\"text-center text-slate-600\\">No source files found.</p>"
+	[[ -z "$src_html" ]] && src_html="<p class=\"text-center text-slate-600\">No source files found.</p>"
 	echo "$src_html" >/tmp/src.html
 	sed -i "/%%SOURCE_FILES%%/r /tmp/src.html" "${OUTPUT_DIR}/index.html"
 	sed -i "/%%SOURCE_FILES%%/d" "${OUTPUT_DIR}/index.html"
@@ -718,12 +718,12 @@ EOFDOCS
 		local name=$(basename "$file")
 		local lang=$(detect_language "$file")
 		local code=$(cat "$file" | sed 's/&/\\&amp;/g; s/</\\&lt;/g; s/>/\\&gt;/g')
-		ex_html+="<div class=\\"bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden\\">"
-		ex_html+="<div class=\\"bg-gradient-to-r from-green-500 to-green-600 px-6 py-4\\">"
-		ex_html+="<h3 class=\\"text-xl font-semibold text-white\\">${name}</h3></div>"
-		ex_html+="<div class=\\"p-6\\"><pre><code class=\\"language-${lang}\\">${code}</code></pre></div></div>"
+		ex_html+="<div class=\"bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden\">"
+		ex_html+="<div class=\"bg-gradient-to-r from-green-500 to-green-600 px-6 py-4\">"
+		ex_html+="<h3 class=\"text-xl font-semibold text-white\">${name}</h3></div>"
+		ex_html+="<div class=\"p-6\"><pre><code class=\"language-${lang}\">${code}</code></pre></div></div>"
 	done
-	[[ -z "$ex_html" ]] && ex_html="<p class=\\"text-center text-slate-600\\">No examples found.</p>"
+	[[ -z "$ex_html" ]] && ex_html="<p class=\"text-center text-slate-600\">No examples found.</p>"
 	echo "$ex_html" >/tmp/ex.html
 	sed -i "/%%EXAMPLES%%/r /tmp/ex.html" "${OUTPUT_DIR}/index.html"
 	sed -i "/%%EXAMPLES%%/d" "${OUTPUT_DIR}/index.html"
