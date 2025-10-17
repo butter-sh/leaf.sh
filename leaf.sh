@@ -459,7 +459,7 @@ scan_source_files() {
         fi
         files+=("$file")
         log_debug "Found source file: $rel_path"
-    done < <(find "$PROJECT_DIR" -type f \\( -name "*.sh" -o -name "*.bash" -o -name "*.js" -o -name "*.py" -o -name "*.rb" -o -name "*.go" -o -name "*.rs" \\) -print0 2>/dev/null || true)
+    done < <(find "$PROJECT_DIR" -type f -o -name "*.sh" -o -name "*.bash" -o -name "*.js" -o -name "*.py" -o -name "*.rb" -o -name "*.go" -o -name "*.rs" -print0 2>/dev/null || true)
     
     printf '%s\
 ' "${files[@]}"
