@@ -1,0 +1,20 @@
+{
+  "page_title": "butter.sh - Modern Bash Development Ecosystem",
+  "page_description": "A collection of modern bash development tools for the command line renaissance",
+  "base_path": "/",
+  "site_name": "butter.sh",
+  "logo": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"128\" height=\"128\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z\"/><polyline points=\"3.27 6.96 12 12.01 20.73 6.96\"/><line x1=\"12\" y1=\"22.08\" x2=\"12\" y2=\"12\"/></svg>",
+  "hero_tagline": "Modern bash development tools for the command line renaissance",
+  "primary_cta_text": "Explore Projects",
+  "primary_cta_url": "https://github.com/butter-sh",
+  "secondary_cta_text": "Learn More",
+  "secondary_cta_url": "#projects",
+  "projects_section_title": "Our Projects",
+  "projects_json": "[{\"url\":\"https://github.com/butter-sh/hammer.sh\",\"label\":\"hammer.sh\",\"desc\":\"Configurable bash project generator\",\"class\":\"card-project\"},{\"url\":\"https://github.com/butter-sh/arty.sh\",\"label\":\"arty.sh\",\"desc\":\"Bash library repository manager\",\"class\":\"card-project\"},{\"url\":\"https://github.com/butter-sh/leaf.sh\",\"label\":\"leaf.sh\",\"desc\":\"Beautiful documentation generator\",\"class\":\"card-project\"},{\"url\":\"https://github.com/butter-sh/myst.sh\",\"label\":\"myst.sh\",\"desc\":\"Mustache-style templating engine\",\"class\":\"card-project\"},{\"url\":\"https://github.com/butter-sh/icony.sh\",\"label\":\"icony.sh\",\"desc\":\"SVG to icon set generator\",\"class\":\"card-project\"},{\"url\":\"https://github.com/butter-sh/judge.sh\",\"label\":\"judge.sh\",\"desc\":\"Bash testing framework\",\"class\":\"card-project\"}]",
+  "github_url": "https://github.com/butter-sh",
+  "footer_tagline": "Building the future of bash development",
+  "default_theme": "dark",
+  "nav_items": "#projects",
+  "generator_credit": "true",
+  "myst_enabled": "true"
+}

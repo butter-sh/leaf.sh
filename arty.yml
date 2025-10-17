@@ -8,6 +8,7 @@ main: leaf.sh
 
 references:
 - https://github.com/butter-sh/judge.sh.git
+- https://github.com/butter-sh/myst.sh.git
 
 # Dependencies
 dependencies:

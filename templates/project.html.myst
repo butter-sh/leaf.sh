@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+{{> _head}}
+<link rel="stylesheet" href="../_assets/styles/iconset.css">
+{{> _carbon_styles}}
+
+<style>
+    /* Additional project-specific styles */
+    .feature-card {
+        background: rgba(44, 62, 80, 0.6);
+        border: 1px solid rgba(134, 239, 172, 0.2);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        padding: 2rem;
+        rounded: 1rem;
+    }
+    .feature-card:hover {
+        border-color: var(--carbon-light);
+        box-shadow: 0 10px 30px rgba(134, 239, 172, 0.2);
+        transform: translateY(-4px);
+    }
+    
+    .stat-box {
+        background: rgba(134, 239, 172, 0.1);
+        border: 2px solid var(--carbon-light);
+        backdrop-filter: blur(10px);
+    }
+    
+    .section-divider {
+        border-top: 2px solid rgba(134, 239, 172, 0.2);
+        margin: 4rem 0;
+    }
+</style>
+</head>
+<body class="carbon-bg min-h-screen text-slate-100">
+    {{> _header}}
+
+    <!-- Hero Section -->
+    <section class="relative py-24 px-4 overflow-hidden">
+        <div class="max-w-7xl mx-auto text-center relative z-10">
+            <div class="mb-8">
+                <div class="w-24 h-24 mx-auto">{{project_icon}}</div>
+            </div>
+            <h1 class="text-6xl font-black mb-4 animate-fade-in" style="color: var(--carbon-light);">
+                leaf.sh
+            </h1>
+            <p class="text-xl text-slate-300 mb-8 max-w-2xl mx-auto animate-fade-in">
+                {{project_tagline}}
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 animate-fade-in">
+                <a href="{{install_url}}" class="cta-gradient px-6 py-3 rounded-lg font-bold text-slate-900">
+                    Get Started
+                </a>
+                <a href="{{docs_url}}" class="cta-secondary px-6 py-3 rounded-lg font-bold">
+                    Documentation
+                </a>
+                <a href="{{github_url}}" class="cta-secondary px-6 py-3 rounded-lg font-bold">
+                    <i class="icon icon-github mr-2"></i>GitHub
+                </a>
+            </div>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto">
+                {{#if project_version}}
+                <div class="stat-box p-4 rounded-lg">
+                    <div class="text-3xl font-bold" style="color: var(--carbon-light);">{{project_version}}</div>
+                    <div class="text-sm text-slate-400">Version</div>
+                </div>
+                {{/if}}
+                {{#if project_license}}
+                <div class="stat-box p-4 rounded-lg">
+                    <div class="text-3xl font-bold" style="color: var(--carbon-light);">{{project_license}}</div>
+                    <div class="text-sm text-slate-400">License</div>
+                </div>
+                {{/if}}
+                {{#if stars_count}}
+                <div class="stat-box p-4 rounded-lg">
+                    <div class="text-3xl font-bold" style="color: var(--carbon-light);">{{stars_count}}</div>
+                    <div class="text-sm text-slate-400">Stars</div>
+                </div>
+                {{/if}}
+                {{#if contributors_count}}
+                <div class="stat-box p-4 rounded-lg">
+                    <div class="text-3xl font-bold" style="color: var(--carbon-light);">{{contributors_count}}</div>
+                    <div class="text-sm text-slate-400">Contributors</div>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    {{#if features}}
+    <section id="features" class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-5xl font-bold mb-16 text-center" style="color: var(--carbon-light);">
+                Features
+            </h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {{#each features}}
+                <div class="feature-card">
+                    <div class="flex items-center mb-4">
+                        <i class="icon icon-check-circle icon-2xl mr-3" style="color: var(--carbon-light);"></i>
+                        <h3 class="text-xl font-bold text-white">{{this}}</h3>
+                    </div>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </section>
+    {{/if}}
+
+    <div class="section-divider max-w-7xl mx-auto"></div>
+
+    <!-- Installation Section -->
+    <section id="installation" class="py-20 px-4">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-5xl font-bold mb-12 text-center" style="color: var(--carbon-light);">
+                Installation
+            </h2>
+            <div class="card-project p-8 rounded-xl">
+                <div class="mb-6">
+                    <h3 class="text-2xl font-bold text-white mb-4">Quick Install</h3>
+                    <pre class="bg-slate-900 p-4 rounded-lg overflow-x-auto"><code class="text-green-400">{{install_command}}</code></pre>
+                </div>
+                
+                {{#if install_steps}}
+                <div>
+                    <h3 class="text-2xl font-bold text-white mb-4">Manual Installation</h3>
+                    <ol class="space-y-3 text-slate-300">
+                        {{#each install_steps}}
+                        <li class="flex items-start">
+                            <span class="inline-flex items-center justify-center w-8 h-8 rounded-full mr-3" style="background: var(--carbon-light); color: #1a1a1a;">{{@index}}</span>
+                            <span class="flex-1">{{this}}</span>
+                        </li>
+                        {{/each}}
+                    </ol>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </section>
+
+    <div class="section-divider max-w-7xl mx-auto"></div>
+
+    <!-- Usage Section -->
+    {{#if usage_example}}
+    <section id="usage" class="py-20 px-4">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-5xl font-bold mb-12 text-center" style="color: var(--carbon-light);">
+                Usage
+            </h2>
+            <div class="card-project p-8 rounded-xl">
+                <pre class="bg-slate-900 p-6 rounded-lg overflow-x-auto"><code class="text-slate-300">{{usage_example}}</code></pre>
+            </div>
+        </div>
+    </section>
+    {{/if}}
+
+    <div class="section-divider max-w-7xl mx-auto"></div>
+
+    <!-- Related Projects -->
+    {{#if related_projects}}
+    <section id="related" class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-5xl font-bold mb-16 text-center" style="color: var(--carbon-light);">
+                Related Projects
+            </h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {{#each related_projects}}
+                <div class="card-project p-6 rounded-xl">
+                    <h3 class="text-2xl font-bold mb-3" style="color: var(--carbon-light);">{{label}}</h3>
+                    <p class="text-slate-300 mb-4">{{desc}}</p>
+                    <a href="{{url}}" target="_blank" class="inline-flex items-center space-x-2 text-white hover:underline">
+                        <span>Learn More</span>
+                        <i class="icon icon-arrow-right"></i>
+                    </a>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </section>
+    {{/if}}
+
+    {{> _footer}}
+
+    {{> _common_scripts}}
+</body>
+</html>

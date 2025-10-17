@@ -1,0 +1,9 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{page_title}}</title>
+    <meta name="description" content="{{page_description}}">
+    <base href="{{base_path}}">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    {{extra_head}}

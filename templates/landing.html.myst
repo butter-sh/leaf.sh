@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+{{> _head}}
+<link rel="stylesheet" href="../_assets/styles/iconset.css">
+{{> _carbon_styles}}
+</head>
+<body class="carbon-bg min-h-screen text-slate-100">
+    {{> _header}}
+
+    <!-- Hero Section -->
+    <section class="relative py-32 px-4 overflow-hidden">
+        <div class="max-w-7xl mx-auto text-center relative z-10">
+            <div class="mb-8">
+                <div class="w-32 h-32 mx-auto">{{logo}}</div>
+            </div>
+            <h1 class="text-7xl font-black mb-6 animate-fade-in" style="color: var(--carbon-light);">
+                {{site_name}}
+            </h1>
+            <p class="text-2xl text-slate-300 mb-12 max-w-3xl mx-auto animate-fade-in">
+                {{hero_tagline}}
+            </p>
+            
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in">
+                <a href="{{primary_cta_url}}" class="cta-gradient px-8 py-4 rounded-lg font-bold text-slate-900 text-lg">
+                    {{primary_cta_text}}
+                </a>
+                <a href="{{secondary_cta_url}}" class="cta-secondary px-8 py-4 rounded-lg font-bold text-lg">
+                    {{secondary_cta_text}}
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-20 px-4">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-5xl font-bold mb-16 text-center" style="color: var(--carbon-light);">
+                {{projects_section_title}}
+            </h2>
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8" id="projectsGrid">
+                <!-- Projects will be injected here -->
+            </div>
+        </div>
+    </section>
+
+    {{> _footer}}
+
+    {{> _common_scripts}}
+    
+    <script>
+        // Inject projects
+        const projects = {{projects_json}};
+        const grid = document.getElementById('projectsGrid');
+        projects.forEach((proj, i) => {
+            const card = document.createElement('div');
+            card.className = `${proj.class || 'card-project'} p-8 rounded-xl animate-fade-in`;
+            card.style.animationDelay = `${i * 0.1}s`;
+            card.innerHTML = `
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-2xl font-bold" style="color: var(--carbon-light);">${proj.label}</h3>
+                    <i class="icon icon-cube icon-xl" style="color: var(--carbon-light);"></i>
+                </div>
+                <p class="text-slate-300 mb-6">${proj.desc}</p>
+                <a href="${proj.url}" target="_blank" class="inline-flex items-center space-x-2 text-white hover:underline">
+                    <span>View Project</span>
+                    <i class="icon icon-link"></i>
+                </a>
+            `;
+            grid.appendChild(card);
+        });
+    </script>
+</body>
+</html>
