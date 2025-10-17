@@ -1,11 +1,11 @@
 name: "leaf.sh"
 version: "2.2.0"
 description: "Beautiful documentation and landing page generator for arty.sh projects and butter.sh"
-author: "butter.sh"
+author: ""
 license: "MIT"
 
-# Entry point script
-main: "leaf.sh"
+references:
+- https://github.com/butter-sh/judge.sh.git
 
 # Dependencies
 dependencies:
