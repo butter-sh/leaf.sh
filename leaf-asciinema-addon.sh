@@ -18,7 +18,7 @@ NC='\033[0m' # No Color
 # Default configuration
 PROJECT_DIR="${1:-.}"
 OUTPUT_DIR="${PROJECT_DIR}/docs"
-MODE="docs"  # docs or landing
+MODE="docs" # docs or landing
 LOGO_PATH=""
 BASE_PATH="/"
 GITHUB_URL="https://github.com/butter-sh"
@@ -34,7 +34,7 @@ log_error() { echo -e "${RED}✗${NC} $1"; }
 
 # Show banner
 show_banner() {
-    cat << 'EOF'
+	cat <<'EOF'
 ╔═══════════════════════════════════════════╗
 ║                                           ║
 ║  🍃 leaf.sh - Documentation Generator   ║
@@ -46,7 +46,7 @@ EOF
 
 # Show usage
 show_usage() {
-    cat << EOF
+	cat <<EOF
 ${CYAN}leaf.sh${NC} v2.2.0 - Documentation & Landing Page Generator
 
 ${GREEN}COMMANDS:${NC}
@@ -88,7 +88,7 @@ EOF
 
 # Check if command exists
 command_exists() {
-    command -v "$1" &> /dev/null
+	command -v "$1" &>/dev/null
 }
 
 # =====================================================
@@ -96,148 +96,148 @@ command_exists() {
 # =====================================================
 
 cast_list() {
-    log_info "Searching for .cast files..."
-    
-    local found=0
-    local search_dirs=("$PROJECT_DIR" "$DEMOS_DIR")
-    
-    for dir in "${search_dirs[@]}"; do
-        if [[ ! -d "$dir" ]]; then
-            continue
-        fi
-        
-        while IFS= read -r -d '' cast_file; do
-            if [[ -f "$cast_file" ]]; then
-                local rel_path="${cast_file#${PROJECT_DIR}/}"
-                local size=$(du -h "$cast_file" | cut -f1)
-                local date=$(date -r "$cast_file" "+%Y-%m-%d %H:%M" 2>/dev/null || echo "unknown")
-                echo -e "  ${GREEN}•${NC} $rel_path  ${CYAN}($size, $date)${NC}"
-                found=1
-            fi
-        done < <(find "$dir" -maxdepth 2 -name "*.cast" -print0 2>/dev/null || true)
-    done
-    
-    if [[ $found -eq 0 ]]; then
-        log_info "No .cast files found"
-        echo ""
-        log_info "Create recordings with: init.sh rec my-demo"
-    fi
+	log_info "Searching for .cast files..."
+
+	local found=0
+	local search_dirs=("$PROJECT_DIR" "$DEMOS_DIR")
+
+	for dir in "${search_dirs[@]}"; do
+		if [[ ! -d "$dir" ]]; then
+			continue
+		fi
+
+		while IFS= read -r -d '' cast_file; do
+			if [[ -f "$cast_file" ]]; then
+				local rel_path="${cast_file#${PROJECT_DIR}/}"
+				local size=$(du -h "$cast_file" | cut -f1)
+				local date=$(date -r "$cast_file" "+%Y-%m-%d %H:%M" 2>/dev/null || echo "unknown")
+				echo -e "  ${GREEN}•${NC} $rel_path  ${CYAN}($size, $date)${NC}"
+				found=1
+			fi
+		done < <(find "$dir" -maxdepth 2 -name "*.cast" -print0 2>/dev/null || true)
+	done
+
+	if [[ $found -eq 0 ]]; then
+		log_info "No .cast files found"
+		echo ""
+		log_info "Create recordings with: init.sh rec my-demo"
+	fi
 }
 
 cast_embed() {
-    local cast_file="$1"
-    
-    if [[ -z "$cast_file" ]]; then
-        log_error "Usage: leaf.sh cast embed <cast-file>"
-        return 1
-    fi
-    
-    # Check if file exists (try relative and absolute paths)
-    if [[ ! -f "$cast_file" ]]; then
-        if [[ -f "$PROJECT_DIR/$cast_file" ]]; then
-            cast_file="$PROJECT_DIR/$cast_file"
-        elif [[ -f "$DEMOS_DIR/$cast_file" ]]; then
-            cast_file="$DEMOS_DIR/$cast_file"
-        else
-            log_error "File not found: $cast_file"
-            return 1
-        fi
-    fi
-    
-    local filename=$(basename "$cast_file")
-    
-    log_info "Embed code for: $filename"
-    echo ""
-    echo "After uploading to asciinema.org, use:"
-    echo ""
-    cat << 'EOF'
+	local cast_file="$1"
+
+	if [[ -z "$cast_file" ]]; then
+		log_error "Usage: leaf.sh cast embed <cast-file>"
+		return 1
+	fi
+
+	# Check if file exists (try relative and absolute paths)
+	if [[ ! -f "$cast_file" ]]; then
+		if [[ -f "$PROJECT_DIR/$cast_file" ]]; then
+			cast_file="$PROJECT_DIR/$cast_file"
+		elif [[ -f "$DEMOS_DIR/$cast_file" ]]; then
+			cast_file="$DEMOS_DIR/$cast_file"
+		else
+			log_error "File not found: $cast_file"
+			return 1
+		fi
+	fi
+
+	local filename=$(basename "$cast_file")
+
+	log_info "Embed code for: $filename"
+	echo ""
+	echo "After uploading to asciinema.org, use:"
+	echo ""
+	cat <<'EOF'
 <!-- Replace YOUR-ID with your asciinema recording ID -->
 <a href="https://asciinema.org/a/YOUR-ID" target="_blank">
   <img src="https://asciinema.org/a/YOUR-ID.svg" width="600"/>
 </a>
 EOF
-    echo ""
-    log_info "Upload with: init.sh upload $filename"
+	echo ""
+	log_info "Upload with: init.sh upload $filename"
 }
 
 cast_play() {
-    local cast_file="$1"
-    
-    if [[ -z "$cast_file" ]]; then
-        log_error "Usage: leaf.sh cast play <cast-file>"
-        return 1
-    fi
-    
-    if ! command_exists "asciinema"; then
-        log_error "asciinema not installed"
-        log_info "Install: brew install asciinema"
-        return 1
-    fi
-    
-    # Try different paths
-    if [[ ! -f "$cast_file" ]]; then
-        if [[ -f "$PROJECT_DIR/$cast_file" ]]; then
-            cast_file="$PROJECT_DIR/$cast_file"
-        elif [[ -f "$DEMOS_DIR/$cast_file" ]]; then
-            cast_file="$DEMOS_DIR/$cast_file"
-        else
-            log_error "File not found: $cast_file"
-            return 1
-        fi
-    fi
-    
-    log_info "Playing: $cast_file"
-    asciinema play "$cast_file"
+	local cast_file="$1"
+
+	if [[ -z "$cast_file" ]]; then
+		log_error "Usage: leaf.sh cast play <cast-file>"
+		return 1
+	fi
+
+	if ! command_exists "asciinema"; then
+		log_error "asciinema not installed"
+		log_info "Install: brew install asciinema"
+		return 1
+	fi
+
+	# Try different paths
+	if [[ ! -f "$cast_file" ]]; then
+		if [[ -f "$PROJECT_DIR/$cast_file" ]]; then
+			cast_file="$PROJECT_DIR/$cast_file"
+		elif [[ -f "$DEMOS_DIR/$cast_file" ]]; then
+			cast_file="$DEMOS_DIR/$cast_file"
+		else
+			log_error "File not found: $cast_file"
+			return 1
+		fi
+	fi
+
+	log_info "Playing: $cast_file"
+	asciinema play "$cast_file"
 }
 
 # Scan for asciinema demos
 scan_demos() {
-    local demos=()
-    
-    if [[ ! -d "$DEMOS_DIR" ]]; then
-        return
-    fi
-    
-    while IFS= read -r -d '' cast_file; do
-        if [[ -f "$cast_file" ]]; then
-            demos+=("$cast_file")
-        fi
-    done < <(find "$DEMOS_DIR" -name "*.cast" -print0 2>/dev/null || true)
-    
-    printf '%s\n' "${demos[@]}"
+	local demos=()
+
+	if [[ ! -d "$DEMOS_DIR" ]]; then
+		return
+	fi
+
+	while IFS= read -r -d '' cast_file; do
+		if [[ -f "$cast_file" ]]; then
+			demos+=("$cast_file")
+		fi
+	done < <(find "$DEMOS_DIR" -name "*.cast" -print0 2>/dev/null || true)
+
+	printf '%s\n' "${demos[@]}"
 }
 
 # Generate demo section HTML
 generate_demos_section() {
-    local include_demos="${1:-false}"
-    
-    if [[ "$include_demos" != "true" ]]; then
-        echo ""
-        return
-    fi
-    
-    local demo_files=($(scan_demos))
-    
-    if [[ ${#demo_files[@]} -eq 0 ]]; then
-        log_warn "No demo files found in $DEMOS_DIR"
-        echo ""
-        return
-    fi
-    
-    log_success "Found ${#demo_files[@]} demo recordings"
-    
-    cat << 'EOF'
+	local include_demos="${1:-false}"
+
+	if [[ "$include_demos" != "true" ]]; then
+		echo ""
+		return
+	fi
+
+	local demo_files=($(scan_demos))
+
+	if [[ ${#demo_files[@]} -eq 0 ]]; then
+		log_warn "No demo files found in $DEMOS_DIR"
+		echo ""
+		return
+	fi
+
+	log_success "Found ${#demo_files[@]} demo recordings"
+
+	cat <<'EOF'
     <section id="demos" class="py-16 px-4">
         <div class="max-w-7xl mx-auto">
             <h2 class="text-4xl font-bold mb-12 text-center text-slate-900 dark:text-white">🎬 Demos</h2>
             <div class="grid gap-8">
 EOF
-    
-    for demo_file in "${demo_files[@]}"; do
-        local demo_name=$(basename "$demo_file" .cast)
-        local rel_path="${demo_file#${PROJECT_DIR}/}"
-        
-        cat << EOF
+
+	for demo_file in "${demo_files[@]}"; do
+		local demo_name=$(basename "$demo_file" .cast)
+		local rel_path="${demo_file#${PROJECT_DIR}/}"
+
+		cat <<EOF
                 <div class="bg-white dark:bg-slate-800 rounded-xl shadow-lg overflow-hidden">
                     <div class="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4">
                         <h3 class="text-xl font-semibold text-white">${demo_name}</h3>
@@ -261,9 +261,9 @@ EOF
                     </div>
                 </div>
 EOF
-    done
-    
-    cat << 'EOF'
+	done
+
+	cat <<'EOF'
             </div>
         </div>
     </section>
@@ -275,46 +275,46 @@ EOF
 
 # Main function
 main() {
-    # Handle cast commands first
-    if [[ $# -gt 0 ]]; then
-        case $1 in
-            cast)
-                shift
-                case "${1:-list}" in
-                    list|ls)
-                        cast_list
-                        exit 0
-                        ;;
-                    embed)
-                        shift
-                        cast_embed "$@"
-                        exit 0
-                        ;;
-                    play)
-                        shift
-                        cast_play "$@"
-                        exit 0
-                        ;;
-                    *)
-                        log_error "Unknown cast command: $1"
-                        show_usage
-                        exit 1
-                        ;;
-                esac
-                ;;
-            -h|--help)
-                show_usage
-                exit 0
-                ;;
-        esac
-    fi
-    
-    show_banner
-    
-    # Parse other arguments and generate docs...
-    # [Rest of leaf.sh logic would go here...]
-    
-    log_success "Generation complete!"
+	# Handle cast commands first
+	if [[ $# -gt 0 ]]; then
+		case $1 in
+		cast)
+			shift
+			case "${1:-list}" in
+			list | ls)
+				cast_list
+				exit 0
+				;;
+			embed)
+				shift
+				cast_embed "$@"
+				exit 0
+				;;
+			play)
+				shift
+				cast_play "$@"
+				exit 0
+				;;
+			*)
+				log_error "Unknown cast command: $1"
+				show_usage
+				exit 1
+				;;
+			esac
+			;;
+		-h | --help)
+			show_usage
+			exit 0
+			;;
+		esac
+	fi
+
+	show_banner
+
+	# Parse other arguments and generate docs...
+	# [Rest of leaf.sh logic would go here...]
+
+	log_success "Generation complete!"
 }
 
 # Run main function
