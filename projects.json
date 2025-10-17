@@ -1,0 +1,26 @@
+[
+  {
+    "url": "https://hammer.sh",
+    "label": "hammer.sh",
+    "desc": "Configurable bash project generator with templates",
+    "class": "card-project"
+  },
+  {
+    "url": "https://arty.sh",
+    "label": "arty.sh",
+    "desc": "Bash library repository manager for modular development",
+    "class": "card-project"
+  },
+  {
+    "url": "https://leaf.sh",
+    "label": "leaf.sh",
+    "desc": "Beautiful documentation and landing page generator",
+    "class": "card-project"
+  },
+  {
+    "url": "https://butter.sh",
+    "label": "butter.sh",
+    "desc": "Modern bash development ecosystem and toolchain",
+    "class": "card-project"
+  }
+]
