@@ -352,7 +352,7 @@ validate_projects_json() {
             log_debug "Project $i: $label -> $url"
         fi
         
-        ((i++))
+        i=$((i+1))
     done
     
     return 0
