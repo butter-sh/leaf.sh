@@ -37,8 +37,8 @@ show_banner() {
 	cat <<'EOF'
 ╔═══════════════════════════════════════════╗
 ║                                           ║
-║  🍃 leaf.sh - Documentation Generator   ║
-║  Now with asciinema demo support! 🎬     ║
+║  🍃 leaf.sh - Documentation Generator     ║
+║  Now with asciinema demo support! 🎬      ║
 ║                                           ║
 ╚═══════════════════════════════════════════╝
 EOF
