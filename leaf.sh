@@ -14,7 +14,7 @@ MAGENTA='\\033[0;35m'
 NC='\\033[0m' # No Color
 
 # Default configuration
-PROJECT_DIR="${1:-$PWD}"
+PROJECT_DIR="${1:-.}"
 OUTPUT_DIR="${PROJECT_DIR}/docs"
 MODE="docs" # docs or landing
 LOGO_PATH=""
@@ -532,9 +532,7 @@ generate_docs_page() {
 	mkdir -p "$OUTPUT_DIR"
 
 	# Generate HTML with all features
-	generate_docs_html "$project_name" "$project_version" "$project_desc" "$project_author" \\
-	"$project_license" "$icon_svg" "$readme_content" \\
-	"${source_files[@]}" "---" "${example_files[@]}"
+	generate_docs_html "$project_name" "$project_version" "$project_desc" "$project_author" "$project_license" "$icon_svg" "$readme_content" "${source_files[@]}" "---" "${example_files[@]}"
 
 	log_success "Documentation generated at: ${OUTPUT_DIR}/index.html"
 }
