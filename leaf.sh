@@ -14,7 +14,7 @@ MAGENTA='\\033[0;35m'
 NC='\\033[0m' # No Color
 
 # Default configuration
-PROJECT_DIR="${1:-.}"
+PROJECT_DIR="${1:-$PWD}"
 OUTPUT_DIR="${PROJECT_DIR}/docs"
 MODE="docs" # docs or landing
 LOGO_PATH=""
