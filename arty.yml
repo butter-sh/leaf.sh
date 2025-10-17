@@ -4,6 +4,8 @@ description: "Beautiful documentation and landing page generator for arty.sh pro
 author: ""
 license: "MIT"
 
+main: leaf.sh
+
 references:
 - https://github.com/butter-sh/judge.sh.git
 
