@@ -505,6 +505,12 @@ generate_docs_page() {
   
   log_info "Found ${#source_files[@]} source files and ${#example_files[@]} examples"
   
+  # Check if we have examples
+  local has_examples="false"
+  if [[ ${#example_files[@]} -gt 0 ]]; then
+    has_examples="true"
+  fi
+  
   # Generate HTML (already escaped)
   local src_html=$(generate_source_html "${source_files[@]}")
   local ex_html=$(generate_examples_html "${example_files[@]}")
@@ -538,6 +544,7 @@ generate_docs_page() {
     --arg readme_json "$readme_json" \
     --arg github "$GITHUB_URL" \
     --arg base "$BASE_PATH" \
+    --arg has_examples "$has_examples" \
     --rawfile src_html "$src_html_file" \
     --rawfile ex_html "$ex_html_file" \
     '{
@@ -553,6 +560,7 @@ generate_docs_page() {
       github_url: $github,
       source_files_html: $src_html,
       examples_html: $ex_html,
+      has_examples: $has_examples,
       myst_enabled: "true"
     }' >"$data_file"
   
