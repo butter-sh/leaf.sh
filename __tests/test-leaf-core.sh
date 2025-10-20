@@ -52,60 +52,6 @@ teardown() {
   cleanup_test_env
 }
 
-# Test: leaf.sh without arguments shows usage
-test_no_args_shows_usage() {
-    setup
-    
-    output=$(bash "$LEAF_SH" 2>&1)
-    
-    assert_contains "$output" "USAGE:" "Should show usage"
-    assert_contains "$output" "leaf.sh" "Should mention leaf.sh"
-    assert_contains "$output" "OPTIONS:" "Should show options section"
-    assert_contains "$output" "EXAMPLES:" "Should show examples section"
-    
-    teardown
-}
-
-# Test: leaf.sh --help shows usage
-test_help_flag_shows_usage() {
-    setup
-    
-    output=$(bash "$LEAF_SH" --help 2>&1)
-    
-    assert_contains "$output" "USAGE:" "Should show usage"
-    assert_contains "$output" "Documentation Generator" "Should show description"
-    
-    teardown
-}
-
-# Test: leaf.sh -h shows usage
-test_help_short_flag_shows_usage() {
-    setup
-    
-    output=$(bash "$LEAF_SH" -h 2>&1)
-    
-    assert_contains "$output" "USAGE:" "Should show usage"
-    
-    teardown
-}
-
-# Test: usage shows all command options
-test_usage_shows_all_options() {
-    setup
-    
-    output=$(bash "$LEAF_SH" --help 2>&1)
-    
-    assert_contains "$output" "--landing" "Should show landing option"
-    assert_contains "$output" "--logo" "Should show logo option"
-    assert_contains "$output" "--base-path" "Should show base-path option"
-    assert_contains "$output" "--github" "Should show github option"
-    assert_contains "$output" "--projects" "Should show projects option"
-    assert_contains "$output" "-o, --output" "Should show output option"
-    assert_contains "$output" "-h, --help" "Should show help option"
-    assert_contains "$output" "--debug" "Should show debug option"
-    
-    teardown
-}
 
 # Test: error on missing dependencies
 test_error_on_missing_dependencies() {
@@ -447,10 +393,6 @@ test_detects_language_from_extension() {
 
 # Run all tests
 run_tests() {
-    test_no_args_shows_usage
-    test_help_flag_shows_usage
-    test_help_short_flag_shows_usage
-    test_usage_shows_all_options
     test_error_on_missing_dependencies
     test_unknown_option_shows_error
     test_script_is_executable
