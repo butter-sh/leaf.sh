@@ -1,25 +1,21 @@
-# Output directories
-docs/
-output/
-dist/
+# arty.sh specific
+.arty/
 
-# Temporary files
-*.tmp
-/tmp/
+# OS files
 .DS_Store
-
-# Test artifacts
-__tests/snapshots/*.log
+Thumbs.db
 
 # Editor files
-.vscode/
-.idea/
 *.swp
 *.swo
 *~
+.vscode/
+.idea/
 
-# Dependencies (managed by arty)
-.arty/
+# Temporary files
+tmp/
+temp/
+*.tmp
 
-# Node modules (if any)
-node_modules/
+# Generated docs
+docs/
