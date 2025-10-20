@@ -1,0 +1,95 @@
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+    * { font-family: 'Inter', system-ui, sans-serif; }
+    
+    :root {
+        --carbon-light: #86efac;
+        --carbon-light-dim: #4ade80;
+        --carbon-bg: #1a1a1a;
+        --carbon-surface: #2c3e50;
+    }
+    
+    /* Carbon texture background */
+    .carbon-bg {
+        background: linear-gradient(135deg, #2c3e50 0%, #1a1a1a 100%);
+        position: relative;
+    }
+    .carbon-bg::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-image: 
+            repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(134, 239, 172, 0.03) 2px, rgba(134, 239, 172, 0.03) 4px),
+            repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(134, 239, 172, 0.03) 2px, rgba(134, 239, 172, 0.03) 4px);
+        opacity: 0.5;
+    }
+    
+    /* Gradient CTA */
+    .cta-gradient {
+        background: linear-gradient(135deg, var(--carbon-light) 0%, var(--carbon-light-dim) 100%);
+        box-shadow: 0 0 20px rgba(134, 239, 172, 0.3);
+        transition: all 0.3s ease;
+    }
+    .cta-gradient:hover {
+        box-shadow: 0 0 30px rgba(134, 239, 172, 0.5);
+        transform: translateY(-2px);
+    }
+    
+    .cta-secondary {
+        border: 2px solid var(--carbon-light);
+        color: var(--carbon-light);
+        transition: all 0.3s ease;
+    }
+    .cta-secondary:hover {
+        background: rgba(134, 239, 172, 0.1);
+        box-shadow: 0 0 20px rgba(134, 239, 172, 0.2);
+    }
+    
+    /* Project cards */
+    .card-project {
+        background: rgba(44, 62, 80, 0.6);
+        border: 1px solid rgba(134, 239, 172, 0.2);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+    .card-project:hover {
+        border-color: var(--carbon-light);
+        box-shadow: 0 10px 30px rgba(134, 239, 172, 0.2);
+        transform: translateY(-4px);
+    }
+    
+    /* Light mode overrides */
+    html:not(.dark) {
+        --carbon-bg: #f0f4f8;
+        --carbon-surface: #ffffff;
+    }
+    html:not(.dark) .carbon-bg {
+        background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 100%);
+    }
+    html:not(.dark) .carbon-bg::before {
+        background-image: 
+            repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(74, 222, 128, 0.05) 2px, rgba(74, 222, 128, 0.05) 4px),
+            repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(74, 222, 128, 0.05) 2px, rgba(74, 222, 128, 0.05) 4px);
+    }
+    html:not(.dark) .card-project {
+        background: rgba(255, 255, 255, 0.8);
+        border-color: rgba(74, 222, 128, 0.3);
+    }
+    
+    /* Mobile menu */
+    .mobile-menu {
+        display: none;
+        transition: all 0.3s ease;
+    }
+    .mobile-menu.active {
+        display: block;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in {
+        animation: fadeIn 0.6s ease-out forwards;
+    }
+</style>

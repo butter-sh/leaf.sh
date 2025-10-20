@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+# Fixed scan_source_files function
+
+scan_source_files() {
+  local files=()
+  
+  while IFS= read -r -d $'\0' file; do
+    local rel_path="${file#${PROJECT_DIR}/}"
+    local basename_file=$(basename "$rel_path")
+    
+    # Skip if:
+    # - Path starts with docs/, examples/, node_modules/, __tests/, or .git/
+    # - Filename contains .min.
+    # - Filename starts with . (hidden files)
+    if [[ "$rel_path" =~ ^(docs|examples|node_modules|__tests|\.git)/ ]] || \
+       [[ "$rel_path" =~ \.min\. ]] || \
+       [[ "$basename_file" =~ ^\. ]]; then
+      continue
+    fi
+    
+    files+=("$file")
+  done < <(find "$PROJECT_DIR" -type f \( -name "*.sh" -o -name "*.bash" -o -name "*.js" -o -name "*.py" \) -print0 2>/dev/null || true)
+  
+  printf '%s\n' "${files[@]}"
+}
+
+# Test it
+PROJECT_DIR="."
+cd ~/Projects/butter.sh/projects/whip.sh
+
+echo "Testing fixed scan function..."
+source_files=($(scan_source_files))
+
+echo "Found ${#source_files[@]} files:"
+printf '%s\n' "${source_files[@]}"

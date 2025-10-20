@@ -1,0 +1,30 @@
+<script>
+    // Render markdown README
+    if (typeof marked !== 'undefined') {
+        marked.setOptions({
+            highlight: (code, lang) => {
+                if (lang && hljs.getLanguage(lang)) {
+                    return hljs.highlight(code, { language: lang }).value;
+                }
+                return hljs.highlightAuto(code).value;
+            }
+        });
+        const readmeData = document.getElementById('readmeData');
+        const readmeContent = JSON.parse(readmeData.textContent);
+        document.getElementById('readmeContent').innerHTML = marked.parse(readmeContent);
+    }
+    
+    // Highlight code blocks
+    hljs.highlightAll();
+    
+    // Collapsible source files
+    document.addEventListener('DOMContentLoaded', () => {
+        const sourceFiles = document.querySelectorAll('.source-file');
+        sourceFiles.forEach(file => {
+            const header = file.querySelector('.source-file-header');
+            header.addEventListener('click', () => {
+                file.classList.toggle('expanded');
+            });
+        });
+    });
+</script>

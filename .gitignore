@@ -1,0 +1,25 @@
+# Output directories
+docs/
+output/
+dist/
+
+# Temporary files
+*.tmp
+/tmp/
+.DS_Store
+
+# Test artifacts
+__tests/snapshots/*.log
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Dependencies (managed by arty)
+.arty/
+
+# Node modules (if any)
+node_modules/

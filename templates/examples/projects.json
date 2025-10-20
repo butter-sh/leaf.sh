@@ -1,0 +1,38 @@
+[
+  {
+    "url": "https://github.com/butter-sh/hammer.sh",
+    "label": "hammer.sh",
+    "desc": "Configurable bash project generator with templates",
+    "class": "card-project"
+  },
+  {
+    "url": "https://github.com/butter-sh/arty.sh",
+    "label": "arty.sh",
+    "desc": "Bash library repository manager for dependencies",
+    "class": "card-project"
+  },
+  {
+    "url": "https://github.com/butter-sh/leaf.sh",
+    "label": "leaf.sh",
+    "desc": "Beautiful documentation and landing page generator",
+    "class": "card-project"
+  },
+  {
+    "url": "https://github.com/butter-sh/whip.sh",
+    "label": "whip.sh",
+    "desc": "Release cycle management with semver and changelogs",
+    "class": "card-project"
+  },
+  {
+    "url": "https://github.com/butter-sh/judge.sh",
+    "label": "judge.sh",
+    "desc": "Testing framework with snapshot testing",
+    "class": "card-project"
+  },
+  {
+    "url": "https://github.com/butter-sh/myst.sh",
+    "label": "myst.sh",
+    "desc": "Powerful templating engine for bash",
+    "class": "card-project"
+  }
+]
