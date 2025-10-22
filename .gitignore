@@ -18,4 +18,4 @@ temp/
 *.tmp
 
 # Generated docs
-docs/
+/docs/

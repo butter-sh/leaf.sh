@@ -1,0 +1,30 @@
+name: "docs"
+description: "Generate project documentation"
+variables:
+  - name: project_dir
+    prompt: "Project directory:"
+    default: "."
+  - name: name
+    prompt: "Project name:"
+    default: ""
+  - name: version
+    prompt: "Version:"
+    default: "1.0.0"
+  - name: description
+    prompt: "Description:"
+    default: ""
+  - name: author
+    prompt: "Author:"
+    default: ""
+  - name: license
+    prompt: "License:"
+    default: "MIT"
+  - name: github_url
+    prompt: "GitHub URL:"
+    default: ""
+  - name: base_path
+    prompt: "Base path:"
+    default: "/"
+  - name: logo
+    prompt: "Logo path:"
+    default: ""
