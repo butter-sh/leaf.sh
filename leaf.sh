@@ -104,7 +104,8 @@ COMMON OPTIONS:
 DOCS TEMPLATE OPTIONS:
   --github-url URL        GitHub repository URL
   --base-path PATH        Base path for links (default: /)
-  --logo PATH             Path to logo file
+  --logo PATH             Path to logo SVG file (content will be inlined)
+  --icon PATH             Path to icon SVG file (content will be inlined)
 
 LANDING TEMPLATE OPTIONS:
   --projects FILE         Projects JSON file (required)
@@ -160,144 +161,193 @@ EOF
         local hammer_path
         hammer_path=$(find_hammer) || exit 1
 
+  # Find myst.sh for CSS rendering
+        local myst_path=""
+        if [[ -n "${MYST_SH:-}" ]] && [[ -x "${MYST_SH}" ]]; then
+          myst_path="${MYST_SH}"
+          elif [[ -x "${PWD}/.arty/bin/myst" ]]; then
+            myst_path="${PWD}/.arty/bin/myst"
+            elif [[ -x "${REAL_SCRIPT_DIR}/.arty/bin/myst" ]]; then
+              myst_path="${REAL_SCRIPT_DIR}/.arty/bin/myst"
+              elif command -v myst &>/dev/null; then
+                myst_path="myst"
+              fi
+
   # Read arty.yml from current directory
-        read_arty_yml "$template" || exit 1
+              read_arty_yml "$template" || exit 1
 
   # Build hammer.sh command
-        local hammer_cmd=("$hammer_path" "$template")
+              local hammer_cmd=("$hammer_path" "$template")
 
   # Parse arguments and build hammer.sh command
-        local output_dir=""
-        local hammer_args=()
-        local var_args=()
+              local output_dir=""
+              local hammer_args=()
+              local var_args=()
+              local logo_path=""
+              local icon_path=""
 
-        while [[ $# -gt 0 ]]; do
-          case "$1" in
-          -o|--output)
-          output_dir="$2"
-          shift 2
-          ;;
-          --yes)
-          hammer_args+=("--yes")
-          shift
-          ;;
-          --force)
-          hammer_args+=("--force")
-          shift
-          ;;
-          --github-url|--base-path|--logo|--github-org|--base-url)
-          local key="${1#--}"
-          key="${key//-/_}"  # Replace hyphens with underscores
-          var_args+=("--var" "${key}=$2")
-          shift 2
-          ;;
-          -h|--help)
-          show_help
-          exit 0
-          ;;
-          *)
-          log_error "Unknown option: $1"
-          echo
-          show_help
-          exit 1
-          ;;
-        esac
-      done
+              while [[ $# -gt 0 ]]; do
+                case "$1" in
+                -o|--output)
+                output_dir="$2"
+                shift 2
+                ;;
+                --yes)
+                hammer_args+=("--yes")
+                shift
+                ;;
+                --force)
+                hammer_args+=("--force")
+                shift
+                ;;
+                --logo)
+                logo_path="$2"
+                shift 2
+                ;;
+                --icon)
+                icon_path="$2"
+                shift 2
+                ;;
+                --github-url|--base-path|--github-org|--base-url)
+                local key="${1#--}"
+                key="${key//-/_}"  # Replace hyphens with underscores
+                var_args+=("--var" "${key}=$2")
+                shift 2
+                ;;
+                -h|--help)
+                show_help
+                exit 0
+                ;;
+                *)
+                log_error "Unknown option: $1"
+                echo
+                show_help
+                exit 1
+                ;;
+              esac
+            done
 
   # Validate output directory
-      if [[ -z "$output_dir" ]]; then
-        log_error "Output directory (-o, --output) is required"
-        exit 1
-      fi
+            if [[ -z "$output_dir" ]]; then
+              log_error "Output directory (-o, --output) is required"
+              exit 1
+            fi
 
   # Add output directory to hammer command
-      hammer_cmd+=("$output_dir")
+            hammer_cmd+=("$output_dir")
 
   # Add template directory
-      hammer_cmd+=("--template-dir" "${TEMPLATES_DIR}")
+            hammer_cmd+=("--template-dir" "${TEMPLATES_DIR}")
 
   # Add hammer options
-      if [[ ${#hammer_args[@]} -gt 0 ]]; then
-        hammer_cmd+=("${hammer_args[@]}")
-      fi
+            if [[ ${#hammer_args[@]} -gt 0 ]]; then
+              hammer_cmd+=("${hammer_args[@]}")
+            fi
 
   # Add arty.yml values as variables (prefixed with project_)
-      [[ -n "${ARTY_NAME:-}" ]] && hammer_cmd+=("--var" "project_name=${ARTY_NAME}")
-      [[ -n "${ARTY_VERSION:-}" ]] && hammer_cmd+=("--var" "project_version=${ARTY_VERSION}")
-      [[ -n "${ARTY_DESCRIPTION:-}" ]] && hammer_cmd+=("--var" "project_description=${ARTY_DESCRIPTION}")
-      [[ -n "${ARTY_AUTHOR:-}" ]] && hammer_cmd+=("--var" "project_author=${ARTY_AUTHOR}")
-      [[ -n "${ARTY_LICENSE:-}" ]] && hammer_cmd+=("--var" "project_license=${ARTY_LICENSE}")
+            [[ -n "${ARTY_NAME:-}" ]] && hammer_cmd+=("--var" "project_name=${ARTY_NAME}")
+            [[ -n "${ARTY_VERSION:-}" ]] && hammer_cmd+=("--var" "project_version=${ARTY_VERSION}")
+            [[ -n "${ARTY_DESCRIPTION:-}" ]] && hammer_cmd+=("--var" "project_description=${ARTY_DESCRIPTION}")
+            [[ -n "${ARTY_AUTHOR:-}" ]] && hammer_cmd+=("--var" "project_author=${ARTY_AUTHOR}")
+            [[ -n "${ARTY_LICENSE:-}" ]] && hammer_cmd+=("--var" "project_license=${ARTY_LICENSE}")
+
+  # Read SVG icon/logo content if paths provided
+            if [[ -n "$icon_path" ]] && [[ -f "$icon_path" ]]; then
+              local icon_content
+              icon_content=$(cat "$icon_path")
+              hammer_cmd+=("--var" "icon=$icon_content")
+            fi
+
+            if [[ -n "$logo_path" ]] && [[ -f "$logo_path" ]]; then
+              local logo_content
+              logo_content=$(cat "$logo_path")
+              hammer_cmd+=("--var" "logo=$logo_content")
+            fi
 
   # Add projects array for landing template
-      if [[ "$template" == "landing" ]] && [[ -n "${ARTY_PROJECTS:-}" ]]; then
+            if [[ "$template" == "landing" ]] && [[ -n "${ARTY_PROJECTS:-}" ]]; then
         # Write projects JSON to a temp file and use hammer's --json flag
         # Wrap the array in an object with "projects" key for myst.sh
-        local projects_file="/tmp/leaf-projects-$$.json"
-        echo "{\"projects\":$ARTY_PROJECTS}" > "$projects_file"
-        hammer_cmd+=("--json" "$projects_file")
-      fi
+              local projects_file="/tmp/leaf-projects-$$.json"
+              echo "{\"projects\":$ARTY_PROJECTS}" > "$projects_file"
+              hammer_cmd+=("--json" "$projects_file")
+            fi
 
   # Add source files for docs template
-      if [[ "$template" == "docs" ]]; then
+            if [[ "$template" == "docs" ]]; then
         # Find all .sh files in current directory (non-recursive, exclude hidden dirs)
-        local source_files=()
-        while IFS= read -r -d '' file; do
-          source_files+=("$(basename "$file")")
-        done < <(find . -maxdepth 1 -name "*.sh" -type f -print0 2>/dev/null)
+              local source_files=()
+              while IFS= read -r -d '' file; do
+                source_files+=("$(basename "$file")")
+              done < <(find . -maxdepth 1 -name "*.sh" -type f -print0 2>/dev/null)
 
         # Generate JSON array of source filenames
-        local source_files_json="["
-        for i in "${!source_files[@]}"; do
-          source_files_json+="\"${source_files[$i]}\""
-          [[ $i -lt $((${#source_files[@]} - 1)) ]] && source_files_json+=","
-        done
-        source_files_json+="]"
+              local source_files_json="["
+              for i in "${!source_files[@]}"; do
+                source_files_json+="\"${source_files[$i]}\""
+                [[ $i -lt $((${#source_files[@]} - 1)) ]] && source_files_json+=","
+              done
+              source_files_json+="]"
 
-        hammer_cmd+=("--var" "source_files_json=$source_files_json")
-      fi
+              hammer_cmd+=("--var" "source_files_json=$source_files_json")
+            fi
 
   # Add user-provided variable arguments (these override arty.yml values)
-      if [[ ${#var_args[@]} -gt 0 ]]; then
-        hammer_cmd+=("${var_args[@]}")
-      fi
+            if [[ ${#var_args[@]} -gt 0 ]]; then
+              hammer_cmd+=("${var_args[@]}")
+            fi
 
   # Execute hammer.sh
-      log_info "Generating ${template} documentation..."
-      log_info "Command: ${hammer_cmd[*]}"
+            log_info "Generating ${template} documentation..."
+            log_info "Command: ${hammer_cmd[*]}"
 
-      if "${hammer_cmd[@]}"; then
+            if "${hammer_cmd[@]}"; then
+        # Post-process: copy carbon.css from partials
+              local carbon_css="${TEMPLATES_DIR}/_partials/_carbon.css.myst"
+              if [[ -f "$carbon_css" ]]; then
+          # Render the CSS template (in case it has variables, though currently it doesn't)
+                if [[ -n "$myst_path" ]]; then
+            "$myst_path" "$carbon_css" > "$output_dir/carbon.css" 2>/dev/null || \
+                     cat "$carbon_css" > "$output_dir/carbon.css"
+                  else
+            # Fallback: just copy the file without .myst extension
+                  cat "$carbon_css" > "$output_dir/carbon.css"
+                fi
+                log_success "Copied carbon.css"
+              fi
+
         # Post-process for docs template: copy README and source files
-        if [[ "$template" == "docs" ]]; then
-          log_info "Copying README and source files..."
+              if [[ "$template" == "docs" ]]; then
+                log_info "Copying README and source files..."
 
           # Copy README.md if it exists
-          if [[ -f "README.md" ]]; then
-            cp "README.md" "$output_dir/"
-            log_success "Copied README.md"
-          fi
+                if [[ -f "README.md" ]]; then
+                  cp "README.md" "$output_dir/"
+                  log_success "Copied README.md"
+                fi
 
           # Create source directory and copy .sh files
-          if [[ ${#source_files[@]} -gt 0 ]]; then
-            mkdir -p "$output_dir/source"
-            for file in "${source_files[@]}"; do
-              if [[ -f "$file" ]]; then
-                cp "$file" "$output_dir/source/"
-                log_success "Copied $file"
+                if [[ ${#source_files[@]} -gt 0 ]]; then
+                  mkdir -p "$output_dir/source"
+                  for file in "${source_files[@]}"; do
+                    if [[ -f "$file" ]]; then
+                      cp "$file" "$output_dir/source/"
+                      log_success "Copied $file"
+                    fi
+                  done
+                fi
               fi
-            done
-          fi
-        fi
 
-        log_success "Documentation generated successfully"
-        log_info "Output: ${output_dir}"
-        exit 0
-        else
-        log_error "Generation failed"
-        exit 1
-      fi
-    }
+              log_success "Documentation generated successfully"
+              log_info "Output: ${output_dir}"
+              exit 0
+              else
+              log_error "Generation failed"
+              exit 1
+            fi
+          }
 
 # Run main if not sourced
-    if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-      main "$@"
-    fi
+          if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+            main "$@"
+          fi

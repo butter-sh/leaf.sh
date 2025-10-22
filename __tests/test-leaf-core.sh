@@ -208,8 +208,8 @@ test_custom_logo_path() {
   echo '<svg></svg>' > logos/custom.svg
     
   (cd test-project && \
-     bash "$LEAF_SH" docs -o ../test-output --logo ../logos/custom.svg --yes) >/dev/null 2>&1 || \
-     true
+  bash "$LEAF_SH" docs -o ../test-output --logo ../logos/custom.svg --yes) >/dev/null 2>&1 || \
+  true
     
   if [[ -f "test-output/index.html" ]]; then
         # Use grep to check for svg content
