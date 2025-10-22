@@ -145,6 +145,26 @@
     transform: rotate(180deg);
 }
 
+.prose a {
+    color: var(--carbon-light);
+    text-decoration: underline;
+    text-decoration-color: rgba(134, 239, 172, 0.5);
+    transition: all 0.2s;
+}
+
+.prose a:hover {
+    color: var(--carbon-light-dim);
+    text-decoration-color: var(--carbon-light);
+}
+
+.prose code {
+    background: rgba(134, 239, 172, 0.1);
+    color: var(--carbon-light);
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    border: 1px solid rgba(134, 239, 172, 0.2);
+}
+
 .prose > div > img {
   filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(1072%) hue-rotate(77deg) brightness(99%) contrast(92%);
 }
