@@ -73,20 +73,14 @@ leaf.sh uses a **template-as-subcommand** architecture. Available templates: `do
 # Interactive mode
 leaf docs -o ./docs
 
-# Batch mode with all options
+# Batch mode with icon
 leaf docs -o ./docs \
-  --project-dir . \
-  --name "my-project" \
-  --version "1.0.0" \
-  --description "My awesome project" \
-  --author "Your Name" \
-  --license "MIT" \
+  --icon ./icon.svg \
   --github-url "https://github.com/user/repo" \
-  --logo ./icon.svg \
   --yes
 
-# Minimal with defaults
-leaf docs -o ./docs --project-dir . --yes
+# Minimal with defaults (reads from arty.yml)
+leaf docs -o ./docs --icon ./icon.svg --yes
 ```
 
 ### Generate Landing Page
@@ -95,17 +89,15 @@ leaf docs -o ./docs --project-dir . --yes
 # Interactive mode
 leaf landing -o ./index.html
 
-# Batch mode
+# Batch mode with logo
 leaf landing -o ./index.html \
-  --projects projects.json \
-  --title "butter.sh" \
-  --description "Professional Bash Development Ecosystem" \
-  --github-org "https://github.com/butter-sh" \
+  --logo ./logo.svg \
+  --github-url "https://github.com/butter-sh" \
   --base-url "https://butter-sh.github.io" \
   --yes
 
-# Minimal
-leaf landing -o ./index.html --projects projects.json --yes
+# Minimal (reads from arty.yml)
+leaf landing -o ./index.html --logo ./logo.svg --yes
 ```
 
 ### Common Options
@@ -120,31 +112,26 @@ leaf landing -o ./index.html --projects projects.json --yes
 ### Template-Specific Options
 
 **docs template:**
-- `--project-dir PATH` — Project directory (default: `.`)
-- `--name TEXT` — Project name
-- `--version TEXT` — Version (default: `1.0.0`)
-- `--description TEXT` — Project description
-- `--author TEXT` — Author name
-- `--license TEXT` — License (default: `MIT`)
 - `--github-url URL` — GitHub repository URL
 - `--base-path PATH` — Base path for links (default: `/`)
-- `--logo PATH` — Logo file path
+- `--icon PATH` — Path to icon SVG file
+- `--logo PATH` — Path to logo SVG file
 
 **landing template:**
-- `--projects PATH` — Projects JSON file (default: `projects.json`)
-- `--title TEXT` — Page title (default: `butter.sh`)
-- `--description TEXT` — Page description
-- `--github-org URL` — GitHub organization URL
-- `--base-url URL` — Base URL for links
+- `--github-url URL` — GitHub URL for organization/project
+- `--base-url URL` — Base URL for project links
+- `--logo PATH` — Path to logo SVG file
+
+**Note:** leaf.sh automatically reads `name`, `version`, `description`, `author`, and `license` from `arty.yml` in the current working directory.
 
 ---
 
 ## Documentation Mode
 
-The `docs` template generates project documentation pages. When using `--project-dir`, it automatically reads metadata from `arty.yml`:
+The `docs` template generates project documentation pages. It automatically reads metadata from `arty.yml` in the current directory:
 
 ```bash
-leaf docs -o ./docs --project-dir . --yes
+leaf docs -o ./docs --icon ./icon.svg --yes
 ```
 
 **Reads from arty.yml:**
@@ -159,51 +146,48 @@ license: "MIT"
 **Generates:**
 ```
 docs/
-└── index.html        # Responsive documentation page
-```
-
-**Manual override:**
-```bash
-leaf docs -o ./docs \
-  --name "custom-name" \
-  --version "2.0.0" \
-  --description "Custom description" \
-  --yes
+├── index.html        # Responsive documentation page
+├── carbon.css        # Carbon theme stylesheet
+├── icon.svg          # Project icon
+├── README.md         # Project README
+└── source/           # Source files
+    └── *.sh
 ```
 
 ---
 
 ## Landing Page Mode
 
-The `landing` template generates ecosystem overview pages with project grids:
+The `landing` template generates ecosystem overview pages with project grids. It reads project data from `arty.yml` or a separate projects configuration:
 
 ```bash
-leaf landing -o ./index.html --projects projects.json --yes
+leaf landing -o ./index.html --logo ./logo.svg --yes
 ```
 
-**projects.json:**
-```json
-[
-  {
-    "label": "arty.sh",
-    "desc": "Dependency manager for bash libraries",
-    "url": "https://butter-sh.github.io/arty.sh",
-    "tagline": "Bash dependency manager"
-  },
-  {
-    "label": "judge.sh",
-    "desc": "Professional testing framework",
-    "url": "https://butter-sh.github.io/judge.sh",
-    "tagline": "Bash testing framework"
-  }
-]
+**arty.yml configuration:**
+```yaml
+name: "butter.sh"
+version: "1.0.0"
+description: "Professional Bash Development Ecosystem"
+
+leaf:
+  landing:
+    projects:
+      - label: "arty.sh"
+        desc: "Dependency manager for bash libraries"
+        url: "https://butter-sh.github.io/arty.sh"
+        tagline: "Bash dependency manager"
+      - label: "judge.sh"
+        desc: "Professional testing framework"
+        url: "https://butter-sh.github.io/judge.sh"
+        tagline: "Bash testing framework"
 ```
 
 **Generates:**
 - Responsive landing page with project grid
-- Hover effects and modern styling
+- Carbon theme with smooth scrolling
+- Large logo presentation
 - Mobile-first design
-- Automatic layout from JSON data
 
 ---
 
@@ -216,7 +200,7 @@ leaf landing -o ./index.html --projects projects.json --yes
 arty deps
 
 # Generate docs for current project
-leaf docs -o ./docs --project-dir . --yes
+leaf docs -o ./docs --icon ./icon.svg --yes
 
 # Open in browser
 open docs/index.html
@@ -227,28 +211,33 @@ open docs/index.html
 ```bash
 # Generate docs for all projects
 for project in projects/*/; do
-  leaf docs -o "docs/$(basename "$project")" \
-    --project-dir "$project" \
+  cd "$project"
+  leaf docs -o "../../docs/$(basename "$PWD")" \
+    --icon ./icon.svg \
     --yes
+  cd ../..
 done
 
 # Generate landing page
 leaf landing -o docs/index.html \
-  --projects projects.json \
+  --logo ./logo.svg \
+  --github-url "https://github.com/butter-sh" \
   --yes
 ```
 
 ### Example 3: Custom Branding
 
 ```bash
-# Generate docs with custom metadata
+# Generate docs with custom icon and GitHub link
 leaf docs -o ./docs \
-  --name "MyProject" \
-  --version "2.0.0" \
-  --description "The best bash library ever" \
-  --author "Your Name" \
+  --icon ./custom-icon.svg \
   --github-url "https://github.com/user/myproject" \
+  --yes
+
+# Generate landing with logo
+leaf landing -o ./index.html \
   --logo ./custom-logo.svg \
+  --github-url "https://github.com/myorg" \
   --yes
 ```
 
@@ -274,7 +263,7 @@ jobs:
       - name: Install leaf.sh
         run: arty install https://github.com/butter-sh/leaf.sh.git
       - name: Generate documentation
-        run: arty exec leaf docs -o docs/ --project-dir . --yes
+        run: arty exec leaf docs -o docs/ --icon ./icon.svg --yes
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
@@ -296,9 +285,8 @@ references:
   - https://github.com/butter-sh/leaf.sh.git
 
 scripts:
-  docs: "arty exec leaf docs -o docs/ --project-dir . --yes"
-  landing: "arty exec leaf landing -o index.html --projects projects.json --yes"
-  docs/custom: "arty exec leaf docs -o docs/ --name 'Custom' --version '2.0.0' --yes"
+  docs: "arty exec leaf docs -o docs/ --icon ./icon.svg --yes"
+  landing: "arty exec leaf landing -o index.html --logo ./logo.svg --yes"
 ```
 
 **Usage:**

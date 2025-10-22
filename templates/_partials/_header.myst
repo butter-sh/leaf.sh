@@ -9,9 +9,6 @@
                 <img src="{{logo}}" alt="Logo" class="w-10 h-10" style="filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(1072%) hue-rotate(77deg) brightness(99%) contrast(92%);">
 {{/if}}
                 <span class="text-xl font-bold" style="color: var(--carbon-light);">
-{{#if site_name}}
-                    {{site_name}}
-{{/if}}
 {{#if project_name}}
                     {{project_name}}
 {{/if}}
@@ -24,16 +21,7 @@
 {{/if}}
             </div>
             <div class="flex items-center space-x-4">
-{{#if site_name}}
-                <a href="#projects" class="text-slate-300 hover:text-white transition scroll-smooth" style="hover: color: var(--carbon-light);">Projects</a>
-{{/if}}
-{{#unless site_name}}
-{{#if project_name}}
-                <a href="/" class="text-slate-300 hover:text-white transition" style="hover: color: var(--carbon-light);">Home</a>
-                <a href="#overview" class="text-slate-300 hover:text-white transition" style="hover: color: var(--carbon-light);">Overview</a>
-                <a href="#source" class="text-slate-300 hover:text-white transition">Source</a>
-{{/if}}
-{{/unless}}
+                {{{nav_links}}}
 {{#if has_examples}}
                 <a href="#examples" class="text-slate-300 hover:text-white transition">Examples</a>
 {{/if}}

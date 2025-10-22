@@ -104,13 +104,13 @@ COMMON OPTIONS:
 DOCS TEMPLATE OPTIONS:
   --github-url URL        GitHub repository URL
   --base-path PATH        Base path for links (default: /)
-  --logo PATH             Path to logo SVG file (content will be inlined)
-  --icon PATH             Path to icon SVG file (content will be inlined)
+  --icon PATH             Path to icon SVG file
+  --logo PATH             Path to logo SVG file
 
 LANDING TEMPLATE OPTIONS:
-  --projects FILE         Projects JSON file (required)
-  --github-org URL        GitHub organization URL
+  --github-url URL        GitHub URL for organization/project
   --base-url URL          Base URL for project links
+  --logo PATH             Path to logo SVG file
 
 NOTE:
   leaf.sh automatically reads name, version, description, author, and
@@ -118,13 +118,13 @@ NOTE:
 
 EXAMPLES:
   # Generate project documentation (reads from ./arty.yml)
-  leaf docs -o docs/ --logo icon.svg
+  leaf docs -o docs/ --icon icon.svg
 
-  # Generate landing page
-  leaf landing -o index.html --projects projects.json
+  # Generate landing page with logo
+  leaf landing -o index.html --logo logo.svg --github-url https://github.com/myorg
 
   # Non-interactive mode
-  leaf docs -o docs/ --yes --force
+  leaf docs -o docs/ --icon icon.svg --yes --force
 
 EOF
       }
@@ -208,7 +208,7 @@ EOF
                 icon_path="$2"
                 shift 2
                 ;;
-                --github-url|--base-path|--github-org|--base-url)
+                --github-url|--base-path|--base-url)
                 local key="${1#--}"
                 key="${key//-/_}"  # Replace hyphens with underscores
                 var_args+=("--var" "${key}=$2")
@@ -254,8 +254,16 @@ EOF
             if [[ "$template" == "landing" ]] && [[ -n "${ARTY_NAME:-}" ]]; then
               hammer_cmd+=("--var" "site_name=${ARTY_NAME}")
               hammer_cmd+=("--var" "project_name=${ARTY_NAME}")
+              # Landing page nav links
+              local landing_nav='<a href="#projects" class="text-slate-300 hover:text-white transition scroll-smooth" style="hover: color: var(--carbon-light);">Projects</a>'
+              hammer_cmd+=("--var" "nav_links=$landing_nav")
             elif [[ -n "${ARTY_NAME:-}" ]]; then
               hammer_cmd+=("--var" "project_name=${ARTY_NAME}")
+              # Docs page nav links
+              local docs_nav='<a href="/" class="text-slate-300 hover:text-white transition" style="hover: color: var(--carbon-light);">Home</a>
+                <a href="#overview" class="text-slate-300 hover:text-white transition" style="hover: color: var(--carbon-light);">Overview</a>
+                <a href="#source" class="text-slate-300 hover:text-white transition">Source</a>'
+              hammer_cmd+=("--var" "nav_links=$docs_nav")
             fi
 
   # Pass icon/logo filenames if paths provided (files will be copied later)

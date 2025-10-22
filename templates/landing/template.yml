@@ -10,8 +10,8 @@ variables:
   - name: project_description
     prompt: "Page description:"
     default: "Professional Bash Development Ecosystem"
-  - name: github_org
-    prompt: "GitHub organization URL:"
+  - name: github_url
+    prompt: "GitHub URL:"
     default: "https://github.com/butter-sh"
   - name: base_url
     prompt: "Base URL:"
