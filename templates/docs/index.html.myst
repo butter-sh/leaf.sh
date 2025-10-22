@@ -173,9 +173,11 @@
     <!-- Hero Section -->
     <section class="py-20 px-4">
         <div class="max-w-7xl mx-auto text-center">
+{{#if icon}}
             <div class="inline-block mb-8 animate-fade-in">
-                <div class="w-24 h-24 mx-auto">{{{icon}}}</div>
+                <img src="{{icon}}" alt="{{project_name}} icon" class="w-24 h-24 mx-auto">
             </div>
+{{/if}}
             <h1 class="text-6xl font-bold mb-6 animate-fade-in" style="color: var(--carbon-light);">
                 {{project_name}}
             </h1>

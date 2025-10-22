@@ -251,17 +251,17 @@ EOF
             [[ -n "${ARTY_AUTHOR:-}" ]] && hammer_cmd+=("--var" "project_author=${ARTY_AUTHOR}")
             [[ -n "${ARTY_LICENSE:-}" ]] && hammer_cmd+=("--var" "project_license=${ARTY_LICENSE}")
 
-  # Read SVG icon/logo content if paths provided
+  # Pass icon/logo filenames if paths provided (files will be copied later)
             if [[ -n "$icon_path" ]] && [[ -f "$icon_path" ]]; then
-              local icon_content
-              icon_content=$(cat "$icon_path")
-              hammer_cmd+=("--var" "icon=$icon_content")
+              local icon_filename
+              icon_filename=$(basename "$icon_path")
+              hammer_cmd+=("--var" "icon=$icon_filename")
             fi
 
             if [[ -n "$logo_path" ]] && [[ -f "$logo_path" ]]; then
-              local logo_content
-              logo_content=$(cat "$logo_path")
-              hammer_cmd+=("--var" "logo=$logo_content")
+              local logo_filename
+              logo_filename=$(basename "$logo_path")
+              hammer_cmd+=("--var" "logo=$logo_filename")
             fi
 
   # Add projects array for landing template
@@ -307,13 +307,24 @@ EOF
               if [[ -f "$carbon_css" ]]; then
           # Render the CSS template (in case it has variables, though currently it doesn't)
                 if [[ -n "$myst_path" ]]; then
-            "$myst_path" "$carbon_css" > "$output_dir/carbon.css" 2>/dev/null || \
-                     cat "$carbon_css" > "$output_dir/carbon.css"
+                  "$myst_path" "$carbon_css" > "$output_dir/carbon.css" 2>/dev/null || \
+                  cat "$carbon_css" > "$output_dir/carbon.css"
                   else
             # Fallback: just copy the file without .myst extension
                   cat "$carbon_css" > "$output_dir/carbon.css"
                 fi
                 log_success "Copied carbon.css"
+              fi
+
+        # Post-process: copy icon/logo files if provided
+              if [[ -n "$icon_path" ]] && [[ -f "$icon_path" ]]; then
+                cp "$icon_path" "$output_dir/"
+                log_success "Copied $(basename "$icon_path")"
+              fi
+
+              if [[ -n "$logo_path" ]] && [[ -f "$logo_path" ]]; then
+                cp "$logo_path" "$output_dir/"
+                log_success "Copied $(basename "$logo_path")"
               fi
 
         # Post-process for docs template: copy README and source files

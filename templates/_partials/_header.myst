@@ -3,10 +3,10 @@
         <div class="flex items-center justify-between h-16">
             <div class="flex items-center space-x-3">
 {{#if icon}}
-                <div class="w-10 h-10">{{{icon}}}</div>
+                <img src="{{icon}}" alt="Icon" class="w-10 h-10">
 {{/if}}
 {{#if logo}}
-                <div class="w-10 h-10">{{{logo}}}</div>
+                <img src="{{logo}}" alt="Logo" class="w-10 h-10">
 {{/if}}
                 <span class="text-xl font-bold" style="color: var(--carbon-light);">
 {{#if site_name}}
