@@ -16,7 +16,7 @@ test_handles_nonexistent_directory() {
   setup
 
   set +e
-  output=$(bash "$LEAF_SH" docs -o test-output --project-dir /nonexistent/directory --yes 2>&1)
+  output=$((cd /nonexistent/directory && bash "$LEAF_SH" docs -o ../test-output --yes) 2>&1)
   exit_code=$?
   set -e
 
@@ -34,7 +34,7 @@ test_handles_empty_directory() {
     
   mkdir -p empty-project
     
-  bash "$LEAF_SH" docs -o test-output --project-dir empty-project --yes >/dev/null 2>&1 || true
+  (cd empty-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Should handle gracefully
   assert_true "true" "Should handle empty directory"
@@ -50,7 +50,7 @@ test_handles_binary_only_project() {
     # Create a binary file
   echo -e '\x00\x01\x02\x03' > binary-project/binary.bin
     
-  bash "$LEAF_SH" docs -o test-output --project-dir binary-project --yes >/dev/null 2>&1 || true
+  (cd binary-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Should handle gracefully
   assert_true "true" "Should handle binary-only project"
@@ -72,7 +72,7 @@ test_handles_large_readme() {
     done
   } > large-project/README.md
     
-  bash "$LEAF_SH" docs -o test-output --project-dir large-project --yes >/dev/null 2>&1 || true
+  (cd large-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Should handle large files
   if [[ -f "test-output/index.html" ]]; then
@@ -92,7 +92,8 @@ name: project-with-special<>&"'chars
 description: A project with special characters
 EOF
     
-  bash "$LEAF_SH" docs -o test-output --project-dir "project-with-special-chars" --yes >/dev/null 2>&1 || true
+  (cd "project-with-special-chars" && \
+     bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Should handle special characters
   assert_true "true" "Should handle special characters"
@@ -111,7 +112,7 @@ test_handles_unicode_in_readme() {
 Hello 世界 🌍 émojis and spëcial çhars
 EOF
     
-  bash "$LEAF_SH" docs -o test-output --project-dir unicode-project --yes >/dev/null 2>&1 || true
+  (cd unicode-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
     assert_file_exists "test-output/index.html" "Should handle Unicode"
@@ -132,7 +133,7 @@ echo "{{variable}}"
 echo "{{#if condition}}yes{{/if}}"
 EOF
     
-  bash "$LEAF_SH" docs -o test-output --project-dir template-project --yes >/dev/null 2>&1 || true
+  (cd template-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
     content=$(cat test-output/index.html)
@@ -150,7 +151,7 @@ test_handles_nested_directories() {
   mkdir -p nested/very/deep/structure/with/many/levels
   echo '#!/usr/bin/env bash' > nested/very/deep/structure/with/many/levels/test.sh
     
-  bash "$LEAF_SH" docs -o test-output --project-dir nested --yes >/dev/null 2>&1 || true
+  (cd nested && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Should handle nested structures
   assert_true "true" "Should handle nested directories"
@@ -165,7 +166,7 @@ test_handles_files_without_extensions() {
   mkdir -p no-ext-project
   echo '#!/usr/bin/env bash' > no-ext-project/script
     
-  bash "$LEAF_SH" docs -o test-output --project-dir no-ext-project --yes >/dev/null 2>&1 || true
+  (cd no-ext-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Should handle files without extensions
   assert_true "true" "Should handle extensionless files"
@@ -181,7 +182,7 @@ test_handles_symbolic_links() {
   echo "content" > link-project/real-file.sh
   ln -s real-file.sh link-project/link-file.sh 2>/dev/null || true
     
-  bash "$LEAF_SH" docs -o test-output --project-dir link-project --yes >/dev/null 2>&1 || true
+  (cd link-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Should handle symlinks
   assert_true "true" "Should handle symbolic links"
@@ -197,7 +198,7 @@ test_handles_permission_denied() {
   echo "content" > perm-project/test.sh
   chmod 000 perm-project/test.sh 2>/dev/null || true
     
-  bash "$LEAF_SH" docs -o test-output --project-dir perm-project --yes >/dev/null 2>&1 || true
+  (cd perm-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Restore permissions for cleanup
   chmod 644 perm-project/test.sh 2>/dev/null || true
@@ -216,7 +217,7 @@ test_handles_long_filenames() {
   local long_name="this_is_a_very_long_filename_that_might_cause_issues_in_some_systems_abcdefghijklmnopqrstuvwxyz.sh"
   echo "#!/usr/bin/env bash" > "long-name-project/${long_name}" 2>/dev/null || true
     
-  bash "$LEAF_SH" docs -o test-output --project-dir long-name-project --yes >/dev/null 2>&1 || true
+  (cd long-name-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Should handle long names
   assert_true "true" "Should handle long filenames"
@@ -235,7 +236,7 @@ this is not: valid: yaml: structure
   bad indentation
 EOF
     
-  bash "$LEAF_SH" docs -o test-output --project-dir malformed-project --yes >/dev/null 2>&1 || true
+  (cd malformed-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Should handle malformed YAML
   assert_true "true" "Should handle malformed YAML"
@@ -286,7 +287,8 @@ test_handles_missing_icon() {
 name: no-icon-project
 EOF
     
-  bash "$LEAF_SH" docs -o test-output --project-dir no-icon-project --logo /nonexistent/icon.svg --yes >/dev/null 2>&1 | true
+  (cd no-icon-project && \
+     bash "$LEAF_SH" docs -o ../test-output --logo /nonexistent/icon.svg --yes) >/dev/null 2>&1 || true
     
     # Should use fallback icon
   assert_true "true" "Should handle missing icon"
@@ -305,7 +307,7 @@ test_handles_html_comments_in_code() {
 echo "<!-- HTML comment in string -->"
 EOF
     
-  bash "$LEAF_SH" docs -o test-output --project-dir html-comment-project --yes >/dev/null 2>&1 || true
+  (cd html-comment-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
         # HTML comments should be escaped
@@ -327,7 +329,7 @@ test_handles_script_tags_in_code() {
 echo "<script>alert('xss')</script>"
 EOF
     
-  bash "$LEAF_SH" docs -o test-output --project-dir script-tag-project --yes >/dev/null 2>&1 || true
+  (cd script-tag-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
         # Script tags should be escaped - use grep to check
@@ -353,7 +355,7 @@ name: "Project with \"quotes\""
 description: 'Single and "double" quotes'
 EOF
     
-  bash "$LEAF_SH" docs -o test-output --project-dir quotes-project --yes >/dev/null 2>&1 || true
+  (cd quotes-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Should handle quoted values
   assert_true "true" "Should handle quotes in YAML"
@@ -374,7 +376,7 @@ description: |
   with newlines
 EOF
     
-  bash "$LEAF_SH" docs -o test-output --project-dir newline-project --yes >/dev/null 2>&1 || true
+  (cd newline-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Should handle multi-line descriptions
   assert_true "true" "Should handle multi-line descriptions"
@@ -398,7 +400,7 @@ test_handles_missing_myst() {
   export PATH="/usr/bin:/bin"
 
   set +e
-  output=$(bash "$LEAF_SH" docs -o test-output --project-dir test-project --yes 2>&1)
+  output=$((cd test-project && bash "$LEAF_SH" docs -o ../test-output --yes) 2>&1)
   exit_code=$?
   set -e
 

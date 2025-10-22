@@ -121,7 +121,7 @@ test_strict_mode_enabled() {
 test_generates_docs_directory() {
   setup
 
-  bash "$LEAF_SH" docs -o test-output --project-dir test-project --yes >/dev/null 2>&1 || true
+  (cd test-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
 
   assert_directory_exists "test-output" "Should create output directory"
 
@@ -132,7 +132,7 @@ test_generates_docs_directory() {
 test_output_contains_index_html() {
   setup
 
-  bash "$LEAF_SH" docs -o test-output --project-dir test-project --yes >/dev/null 2>&1 || true
+  (cd test-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
 
   if [[ -d "test-output" ]]; then
     assert_file_exists "test-output/index.html" "Should create index.html"
@@ -148,7 +148,7 @@ test_output_contains_index_html() {
 test_processes_arty_yml() {
   setup
 
-  bash "$LEAF_SH" docs -o test-output --project-dir test-project --yes >/dev/null 2>&1 || true
+  (cd test-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
 
   if [[ -f "test-output/index.html" ]]; then
         # Just check that file was generated - content validation is template-specific
@@ -164,7 +164,7 @@ test_processes_arty_yml() {
 test_processes_readme() {
   setup
 
-  bash "$LEAF_SH" docs -o test-output --project-dir test-project --yes >/dev/null 2>&1 || true
+  (cd test-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
 
   if [[ -f "test-output/index.html" ]]; then
         # Just check that file was generated - content validation is template-specific
@@ -192,7 +192,7 @@ test_landing_mode_flag() {
 test_custom_output_directory() {
   setup
 
-  bash "$LEAF_SH" docs -o custom-output --project-dir test-project --yes >/dev/null 2>&1 || true
+  (cd test-project && bash "$LEAF_SH" docs -o ../custom-output --yes) >/dev/null 2>&1 || true
 
   assert_directory_exists "custom-output" "Should create custom output directory"
 
@@ -207,7 +207,8 @@ test_custom_logo_path() {
   mkdir -p logos
   echo '<svg></svg>' > logos/custom.svg
     
-  bash "$LEAF_SH" docs -o test-output --project-dir test-project --logo logos/custom.svg --yes >/dev/null 2>&1 || true
+  (cd test-project && \
+     bash "$LEAF_SH" docs -o ../test-output --logo ../logos/custom.svg --yes) >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
         # Use grep to check for svg content
@@ -227,7 +228,7 @@ test_custom_logo_path() {
 test_debug_mode_flag() {
   setup
     
-  output=$(bash "$LEAF_SH" docs -o test-output --project-dir test-project --debug --yes 2>&1 || true)
+  output=$((cd test-project && bash "$LEAF_SH" docs -o ../test-output --debug --yes) 2>&1 || true)
     
     # Debug output should contain debug markers
   if [[ "$output" == *"🔍"* ]] || [[ "$output" == *"DEBUG"* ]]; then
@@ -244,7 +245,8 @@ test_debug_mode_flag() {
 test_base_path_option() {
   setup
     
-  bash "$LEAF_SH" docs -o test-output --project-dir test-project --base-path /docs/ --yes >/dev/null 2>&1 || true
+  (cd test-project && \
+     bash "$LEAF_SH" docs -o ../test-output --base-path /docs/ --yes) >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
     content=$(cat test-output/index.html)
@@ -259,7 +261,8 @@ test_base_path_option() {
 test_github_url_option() {
   setup
     
-  bash "$LEAF_SH" docs -o test-output --project-dir test-project --github-url https://github.com/test/test --yes >/dev/null 2>&1 | true
+  (cd test-project && \
+     bash "$LEAF_SH" docs -o ../test-output --github-url https://github.com/test/test --yes) >/dev/null 2>&1 | true
     
   if [[ -f "test-output/index.html" ]]; then
     content=$(cat test-output/index.html)
@@ -277,7 +280,7 @@ test_handles_missing_arty_yml() {
   mkdir -p bare-project
   echo "# Bare Project" > bare-project/README.md
     
-  bash "$LEAF_SH" docs -o test-output --project-dir bare-project --yes >/dev/null 2>&1 || true
+  (cd bare-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Should still generate docs
   assert_true "[[ -d 'test-output' ]] || true" "Should handle missing arty.yml"
@@ -294,7 +297,7 @@ test_handles_missing_readme() {
 name: bare-project
 EOF
     
-  bash "$LEAF_SH" docs -o test-output --project-dir bare-project --yes >/dev/null 2>&1 || true
+  (cd bare-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Should still generate docs
   assert_true "[[ -d 'test-output' ]] || true" "Should handle missing README"
@@ -306,7 +309,7 @@ EOF
 test_detects_source_files() {
   setup
     
-  bash "$LEAF_SH" docs -o test-output --project-dir test-project --yes >/dev/null 2>&1 || true
+  (cd test-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
         # Use grep to check for source files
@@ -326,7 +329,7 @@ test_detects_source_files() {
 test_detects_example_files() {
   setup
     
-  bash "$LEAF_SH" docs -o test-output --project-dir test-project --yes >/dev/null 2>&1 || true
+  (cd test-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
         # Use grep to check for examples
@@ -352,7 +355,7 @@ test_escapes_html_in_code() {
 echo "<html><body>Test</body></html>"
 EOF
     
-  bash "$LEAF_SH" docs -o test-output --project-dir test-project --yes >/dev/null 2>&1 || true
+  (cd test-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
         # Use grep to check for escaped HTML
@@ -376,7 +379,7 @@ test_detects_language_from_extension() {
   echo 'console.log("test");' > test-project/test.js
   echo 'print("test")' > test-project/test.py
     
-  bash "$LEAF_SH" docs -o test-output --project-dir test-project --yes >/dev/null 2>&1 || true
+  (cd test-project && bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
     content=$(cat test-output/index.html)

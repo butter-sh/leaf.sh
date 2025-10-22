@@ -20,4 +20,4 @@ scripts:
   test/setup: "arty exec judge setup"
   test/verbose: "arty exec judge run -v"
   test/ci: "TERM=linux arty exec judge run"
-  docs: "./leaf.sh docs -o ./docs --project-dir . --logo ./icon.svg --base-path leaf.sh"
+  docs: "./leaf.sh docs -o ./docs --logo ./icon.svg --base-path leaf.sh"
