@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🍃 leaf.sh
+# leaf.sh
 
 **Beautiful Documentation and Landing Page Generator**
 

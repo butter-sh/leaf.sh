@@ -5,6 +5,7 @@ author: "valknar@pivoine.art"
 license: "MIT"
 
 references:
+- https://github.com/butter-sh/clean.sh.git
 - https://github.com/butter-sh/leaf.sh.git
 - https://github.com/butter-sh/judge.sh.git
 - https://github.com/butter-sh/myst.sh.git
@@ -12,10 +13,11 @@ references:
 main: "leaf.sh"
 
 scripts:
+  lint: "arty exec clean lint *.sh __tests/*.sh"
+  format: "arty exec clean format *.sh __tests/*.sh"
   test: "arty exec judge run"
   test/update: "arty exec judge run -u"
   test/setup: "arty exec judge setup"
   test/verbose: "arty exec judge run -v"
   test/ci: "TERM=linux arty exec judge run"
-  format: "shfmt -l -w ./*.sh ./examples/*.sh ./__tests/*.sh"
   docs: BASE_PATH=leaf.sh arty exec leaf . --logo ./icon.svg -o ./docs
