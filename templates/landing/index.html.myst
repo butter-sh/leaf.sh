@@ -5,21 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{{project_name}} - {{project_description}}</title>
 
-  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: {
-            sans: ['Inter', 'system-ui', 'sans-serif'],
-          }
-        }
-      }
-    }
-  </script>
-
-  <link rel="stylesheet" href="carbon.css">
+  {{> _head}}
 </head>
 <body class="carbon-bg text-slate-100">
   {{> _header}}
