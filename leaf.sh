@@ -48,6 +48,7 @@ find_hammer() {
 # Read arty.yml from current directory
       read_arty_yml() {
         local arty_file="${PWD}/arty.yml"
+        local template="${1:-}"
 
         if [[ ! -f "$arty_file" ]]; then
           return 0  # No arty.yml found, continue without it
@@ -73,6 +74,13 @@ find_hammer() {
         export ARTY_DESCRIPTION="$description"
         export ARTY_AUTHOR="$author"
         export ARTY_LICENSE="$license"
+
+  # For landing template, read projects array from leaf.landing.projects or hammer.templates.landing.projects
+        if [[ "$template" == "landing" ]]; then
+          local projects_json
+          projects_json=$(yq eval '.leaf.landing.projects // .hammer.templates.landing.projects // []' "$arty_file" -o=json 2>/dev/null || echo "[]")
+          export ARTY_PROJECTS="$projects_json"
+        fi
       }
 
 # Show help
@@ -153,7 +161,7 @@ EOF
         hammer_path=$(find_hammer) || exit 1
 
   # Read arty.yml from current directory
-        read_arty_yml || exit 1
+        read_arty_yml "$template" || exit 1
 
   # Build hammer.sh command
         local hammer_cmd=("$hammer_path" "$template")
@@ -177,7 +185,7 @@ EOF
           hammer_args+=("--force")
           shift
           ;;
-          --github-url|--base-path|--logo|--projects|--github-org|--base-url)
+          --github-url|--base-path|--logo|--github-org|--base-url)
           local key="${1#--}"
           key="${key//-/_}"  # Replace hyphens with underscores
           var_args+=("--var" "${key}=$2")
@@ -213,12 +221,40 @@ EOF
         hammer_cmd+=("${hammer_args[@]}")
       fi
 
-  # Add arty.yml values as variables
-      [[ -n "${ARTY_NAME:-}" ]] && hammer_cmd+=("--var" "name=${ARTY_NAME}")
-      [[ -n "${ARTY_VERSION:-}" ]] && hammer_cmd+=("--var" "version=${ARTY_VERSION}")
-      [[ -n "${ARTY_DESCRIPTION:-}" ]] && hammer_cmd+=("--var" "description=${ARTY_DESCRIPTION}")
-      [[ -n "${ARTY_AUTHOR:-}" ]] && hammer_cmd+=("--var" "author=${ARTY_AUTHOR}")
-      [[ -n "${ARTY_LICENSE:-}" ]] && hammer_cmd+=("--var" "license=${ARTY_LICENSE}")
+  # Add arty.yml values as variables (prefixed with project_)
+      [[ -n "${ARTY_NAME:-}" ]] && hammer_cmd+=("--var" "project_name=${ARTY_NAME}")
+      [[ -n "${ARTY_VERSION:-}" ]] && hammer_cmd+=("--var" "project_version=${ARTY_VERSION}")
+      [[ -n "${ARTY_DESCRIPTION:-}" ]] && hammer_cmd+=("--var" "project_description=${ARTY_DESCRIPTION}")
+      [[ -n "${ARTY_AUTHOR:-}" ]] && hammer_cmd+=("--var" "project_author=${ARTY_AUTHOR}")
+      [[ -n "${ARTY_LICENSE:-}" ]] && hammer_cmd+=("--var" "project_license=${ARTY_LICENSE}")
+
+  # Add projects array for landing template
+      if [[ "$template" == "landing" ]] && [[ -n "${ARTY_PROJECTS:-}" ]]; then
+        # Generate project cards HTML from JSON using the partial
+        local projects_html=""
+        local project_count=$(echo "$ARTY_PROJECTS" | jq 'length')
+        local partial_template="${TEMPLATES_DIR}/landing/partials/project-card.myst"
+
+        if [[ -f "$partial_template" ]]; then
+          for ((i=0; i<project_count; i++)); do
+            local url=$(echo "$ARTY_PROJECTS" | jq -r ".[$i].url // \"\"")
+            local label=$(echo "$ARTY_PROJECTS" | jq -r ".[$i].label // \"\"")
+            local desc=$(echo "$ARTY_PROJECTS" | jq -r ".[$i].desc // \"\"")
+            local tagline=$(echo "$ARTY_PROJECTS" | jq -r ".[$i].tagline // \"\"")
+
+            # Render the partial with project variables
+            local card_html=$(cat "$partial_template" | \
+              sed "s|{{url}}|$url|g" | \
+              sed "s|{{label}}|$label|g" | \
+              sed "s|{{desc}}|$desc|g" | \
+              sed "s|{{tagline}}|$tagline|g")
+
+            projects_html+="$card_html"$'\n'
+          done
+        fi
+
+        hammer_cmd+=("--var" "projects_html=$projects_html")
+      fi
 
   # Add user-provided variable arguments (these override arty.yml values)
       if [[ ${#var_args[@]} -gt 0 ]]; then

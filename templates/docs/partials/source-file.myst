@@ -1,0 +1,16 @@
+<div class="source-file card-project rounded-xl overflow-hidden">
+  <div class="source-file-header p-4 flex items-center justify-between">
+    <div class="flex items-center space-x-3">
+      <svg class="w-5 h-5" style="color: var(--carbon-light);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+      </svg>
+      <span class="font-semibold" style="color: var(--carbon-light);">{{filename}}</span>
+    </div>
+    <svg class="chevron w-5 h-5" style="color: var(--carbon-light);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+    </svg>
+  </div>
+  <div class="source-file-content">
+    <pre class="m-0"><code class="language-{{language}}">{{code}}</code></pre>
+  </div>
+</div>

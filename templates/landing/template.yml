@@ -4,10 +4,10 @@ variables:
   - name: projects
     prompt: "Projects JSON file:"
     default: "projects.json"
-  - name: title
+  - name: project_name
     prompt: "Page title:"
     default: "butter.sh"
-  - name: description
+  - name: project_description
     prompt: "Page description:"
     default: "Professional Bash Development Ecosystem"
   - name: github_org
