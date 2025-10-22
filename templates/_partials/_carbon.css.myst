@@ -157,6 +157,10 @@
     text-decoration-color: var(--carbon-light);
 }
 
+.prose pre {
+  padding: 0px;
+}
+
 .prose code {
     background: rgba(134, 239, 172, 0.1);
     color: var(--carbon-light);
