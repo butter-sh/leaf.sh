@@ -10,6 +10,7 @@
   --carbon-light-dim: #4ade80;
   --carbon-bg: #1a1a1a;
   --carbon-surface: #2c3e50;
+  --carbon-surface-foreground: #e5e7eb;
 }
 
 /* Carbon texture background */
@@ -114,6 +115,36 @@
   display: block;
 }
 
-.readme-prose > div > img {
+/* Collapsible source file styles */
+.source-file {
+    transition: all 0.3s ease;
+}
+.source-file-header {
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.2s;
+    background: rgba(134, 239, 172, 0.15) !important;
+}
+.source-file-header:hover {
+    background: rgba(134, 239, 172, 0.25) !important;
+    box-shadow: 0 0 20px rgba(134, 239, 172, 0.2);
+}
+.source-file-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+.source-file.expanded .source-file-content {
+    max-height: 10000px;
+    transition: max-height 0.5s ease-in;
+}
+.chevron {
+    transition: transform 0.3s ease;
+}
+.source-file.expanded .chevron {
+    transform: rotate(180deg);
+}
+
+.prose > div > img {
   filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(1072%) hue-rotate(77deg) brightness(99%) contrast(92%);
 }
