@@ -257,123 +257,123 @@ EOF
               # Landing page nav links
               local landing_nav='<a href="#projects" class="text-slate-300 hover:text-white transition scroll-smooth" style="hover: color: var(--carbon-light);">Projects</a>'
               hammer_cmd+=("--var" "nav_links=$landing_nav")
-            elif [[ -n "${ARTY_NAME:-}" ]]; then
-              hammer_cmd+=("--var" "project_name=${ARTY_NAME}")
+              elif [[ -n "${ARTY_NAME:-}" ]]; then
+                hammer_cmd+=("--var" "project_name=${ARTY_NAME}")
               # Docs page nav links
-              local docs_nav='<a href="/" class="text-slate-300 hover:text-white transition" style="hover: color: var(--carbon-light);">Home</a>
+                local docs_nav='<a href="/" class="text-slate-300 hover:text-white transition" style="hover: color: var(--carbon-light);">Home</a>
                 <a href="#overview" class="text-slate-300 hover:text-white transition" style="hover: color: var(--carbon-light);">Overview</a>
                 <a href="#source" class="text-slate-300 hover:text-white transition">Source</a>'
-              hammer_cmd+=("--var" "nav_links=$docs_nav")
-            fi
-
-  # Pass icon/logo filenames if paths provided (files will be copied later)
-            if [[ -n "$icon_path" ]] && [[ -f "$icon_path" ]]; then
-              local icon_filename
-              icon_filename=$(basename "$icon_path")
-              hammer_cmd+=("--var" "icon=$icon_filename")
-            fi
-
-            if [[ -n "$logo_path" ]] && [[ -f "$logo_path" ]]; then
-              local logo_filename
-              logo_filename=$(basename "$logo_path")
-              hammer_cmd+=("--var" "logo=$logo_filename")
-            fi
-
-  # Add projects array for landing template
-            if [[ "$template" == "landing" ]] && [[ -n "${ARTY_PROJECTS:-}" ]]; then
-        # Write projects JSON to a temp file and use hammer's --json flag
-        # Wrap the array in an object with "projects" key for myst.sh
-              local projects_file="/tmp/leaf-projects-$$.json"
-              echo "{\"projects\":$ARTY_PROJECTS}" > "$projects_file"
-              hammer_cmd+=("--json" "$projects_file")
-            fi
-
-  # Add source files for docs template
-            if [[ "$template" == "docs" ]]; then
-        # Find all .sh files in current directory (non-recursive, exclude hidden dirs)
-              local source_files=()
-              while IFS= read -r -d '' file; do
-                source_files+=("$(basename "$file")")
-              done < <(find . -maxdepth 1 -name "*.sh" -type f -print0 2>/dev/null)
-
-        # Generate JSON array of source filenames
-              local source_files_json="["
-              for i in "${!source_files[@]}"; do
-                source_files_json+="\"${source_files[$i]}\""
-                [[ $i -lt $((${#source_files[@]} - 1)) ]] && source_files_json+=","
-              done
-              source_files_json+="]"
-
-              hammer_cmd+=("--var" "source_files_json=$source_files_json")
-            fi
-
-  # Add user-provided variable arguments (these override arty.yml values)
-            if [[ ${#var_args[@]} -gt 0 ]]; then
-              hammer_cmd+=("${var_args[@]}")
-            fi
-
-  # Execute hammer.sh
-            log_info "Generating ${template} documentation..."
-            log_info "Command: ${hammer_cmd[*]}"
-
-            if "${hammer_cmd[@]}"; then
-        # Post-process: copy carbon.css from partials
-              local carbon_css="${TEMPLATES_DIR}/_partials/_carbon.css.myst"
-              if [[ -f "$carbon_css" ]]; then
-          # Render the CSS template (in case it has variables, though currently it doesn't)
-                if [[ -n "$myst_path" ]]; then
-                  "$myst_path" "$carbon_css" > "$output_dir/carbon.css" 2>/dev/null || \
-                  cat "$carbon_css" > "$output_dir/carbon.css"
-                  else
-            # Fallback: just copy the file without .myst extension
-                  cat "$carbon_css" > "$output_dir/carbon.css"
-                fi
-                log_success "Copied carbon.css"
+                hammer_cmd+=("--var" "nav_links=$docs_nav")
               fi
 
-        # Post-process: copy icon/logo files if provided
+  # Pass icon/logo filenames if paths provided (files will be copied later)
               if [[ -n "$icon_path" ]] && [[ -f "$icon_path" ]]; then
-                cp "$icon_path" "$output_dir/"
-                log_success "Copied $(basename "$icon_path")"
+                local icon_filename
+                icon_filename=$(basename "$icon_path")
+                hammer_cmd+=("--var" "icon=$icon_filename")
               fi
 
               if [[ -n "$logo_path" ]] && [[ -f "$logo_path" ]]; then
-                cp "$logo_path" "$output_dir/"
-                log_success "Copied $(basename "$logo_path")"
+                local logo_filename
+                logo_filename=$(basename "$logo_path")
+                hammer_cmd+=("--var" "logo=$logo_filename")
               fi
+
+  # Add projects array for landing template
+              if [[ "$template" == "landing" ]] && [[ -n "${ARTY_PROJECTS:-}" ]]; then
+        # Write projects JSON to a temp file and use hammer's --json flag
+        # Wrap the array in an object with "projects" key for myst.sh
+                local projects_file="/tmp/leaf-projects-$$.json"
+                echo "{\"projects\":$ARTY_PROJECTS}" > "$projects_file"
+                hammer_cmd+=("--json" "$projects_file")
+              fi
+
+  # Add source files for docs template
+              if [[ "$template" == "docs" ]]; then
+        # Find all .sh files in current directory (non-recursive, exclude hidden dirs)
+                local source_files=()
+                while IFS= read -r -d '' file; do
+                  source_files+=("$(basename "$file")")
+                done < <(find . -maxdepth 1 -name "*.sh" -type f -print0 2>/dev/null)
+
+        # Generate JSON array of source filenames
+                local source_files_json="["
+                for i in "${!source_files[@]}"; do
+                  source_files_json+="\"${source_files[$i]}\""
+                  [[ $i -lt $((${#source_files[@]} - 1)) ]] && source_files_json+=","
+                done
+                source_files_json+="]"
+
+                hammer_cmd+=("--var" "source_files_json=$source_files_json")
+              fi
+
+  # Add user-provided variable arguments (these override arty.yml values)
+              if [[ ${#var_args[@]} -gt 0 ]]; then
+                hammer_cmd+=("${var_args[@]}")
+              fi
+
+  # Execute hammer.sh
+              log_info "Generating ${template} documentation..."
+              log_info "Command: ${hammer_cmd[*]}"
+
+              if "${hammer_cmd[@]}"; then
+        # Post-process: copy carbon.css from partials
+                local carbon_css="${TEMPLATES_DIR}/_partials/_carbon.css.myst"
+                if [[ -f "$carbon_css" ]]; then
+          # Render the CSS template (in case it has variables, though currently it doesn't)
+                  if [[ -n "$myst_path" ]]; then
+                    "$myst_path" "$carbon_css" > "$output_dir/carbon.css" 2>/dev/null || \
+                    cat "$carbon_css" > "$output_dir/carbon.css"
+                    else
+            # Fallback: just copy the file without .myst extension
+                    cat "$carbon_css" > "$output_dir/carbon.css"
+                  fi
+                  log_success "Copied carbon.css"
+                fi
+
+        # Post-process: copy icon/logo files if provided
+                if [[ -n "$icon_path" ]] && [[ -f "$icon_path" ]]; then
+                  cp "$icon_path" "$output_dir/"
+                  log_success "Copied $(basename "$icon_path")"
+                fi
+
+                if [[ -n "$logo_path" ]] && [[ -f "$logo_path" ]]; then
+                  cp "$logo_path" "$output_dir/"
+                  log_success "Copied $(basename "$logo_path")"
+                fi
 
         # Post-process for docs template: copy README and source files
-              if [[ "$template" == "docs" ]]; then
-                log_info "Copying README and source files..."
+                if [[ "$template" == "docs" ]]; then
+                  log_info "Copying README and source files..."
 
           # Copy README.md if it exists
-                if [[ -f "README.md" ]]; then
-                  cp "README.md" "$output_dir/"
-                  log_success "Copied README.md"
-                fi
+                  if [[ -f "README.md" ]]; then
+                    cp "README.md" "$output_dir/"
+                    log_success "Copied README.md"
+                  fi
 
           # Create source directory and copy .sh files
-                if [[ ${#source_files[@]} -gt 0 ]]; then
-                  mkdir -p "$output_dir/source"
-                  for file in "${source_files[@]}"; do
-                    if [[ -f "$file" ]]; then
-                      cp "$file" "$output_dir/source/"
-                      log_success "Copied $file"
-                    fi
-                  done
+                  if [[ ${#source_files[@]} -gt 0 ]]; then
+                    mkdir -p "$output_dir/source"
+                    for file in "${source_files[@]}"; do
+                      if [[ -f "$file" ]]; then
+                        cp "$file" "$output_dir/source/"
+                        log_success "Copied $file"
+                      fi
+                    done
+                  fi
                 fi
-              fi
 
-              log_success "Documentation generated successfully"
-              log_info "Output: ${output_dir}"
-              exit 0
-              else
-              log_error "Generation failed"
-              exit 1
-            fi
-          }
+                log_success "Documentation generated successfully"
+                log_info "Output: ${output_dir}"
+                exit 0
+                else
+                log_error "Generation failed"
+                exit 1
+              fi
+            }
 
 # Run main if not sourced
-          if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-            main "$@"
-          fi
+            if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+              main "$@"
+            fi

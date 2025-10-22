@@ -8,7 +8,7 @@
 
 [![Organization](https://img.shields.io/badge/org-butter--sh-4ade80?style=for-the-badge&logo=github&logoColor=white)](https://github.com/butter-sh)
 [![License](https://img.shields.io/badge/license-MIT-86efac?style=for-the-badge)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.0.0-22c55e?style=for-the-badge)](https://github.com/butter-sh/leaf.sh/releases)
+[![Version](https://img.shields.io/badge/version-1.0.0-22c55e?style=for-the-badge)](https://github.com/butter-sh/leaf.sh/releases)
 [![butter.sh](https://img.shields.io/badge/butter.sh-leaf-4ade80?style=for-the-badge)](https://butter-sh.github.io)
 
 *Beautiful documentation generator that transforms project metadata into responsive, modern static websites*

@@ -1,7 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
-
 * {
-  font-family: 'Inter', system-ui, sans-serif;
+  font-family: 'Roboto', system-ui, sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -114,4 +112,8 @@
 
 .mobile-menu.active {
   display: block;
+}
+
+.readme-prose > div > img {
+  filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(1072%) hue-rotate(77deg) brightness(99%) contrast(92%);
 }
