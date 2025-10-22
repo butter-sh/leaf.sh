@@ -209,8 +209,10 @@
             <h2 class="text-4xl font-bold mb-12 text-center" style="color: var(--carbon-light);">
                 Source Files
             </h2>
-            <div id="sourceFiles" class="grid gap-6">
-                <p class="text-slate-400 text-center">Loading source files...</p>
+            <div class="max-w-3xl mx-auto">
+                <div id="sourceFiles" class="grid gap-6">
+                    <p class="text-slate-400 text-center">Loading source files...</p>
+                </div>
             </div>
         </div>
     </section>
@@ -228,6 +230,13 @@
 {{/if}}
 
     {{> _footer}}
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTop" class="fixed bottom-8 right-8 p-4 rounded-full transition-all duration-300 opacity-0 pointer-events-none z-50" style="background: linear-gradient(135deg, var(--carbon-light) 0%, var(--carbon-light-dim) 100%); box-shadow: 0 4px 12px rgba(134, 239, 172, 0.4);">
+        <svg class="w-6 h-6 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+        </svg>
+    </button>
 
     <script>
         // List of source files to load

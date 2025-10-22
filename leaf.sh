@@ -251,6 +251,11 @@ EOF
             [[ -n "${ARTY_AUTHOR:-}" ]] && hammer_cmd+=("--var" "project_author=${ARTY_AUTHOR}")
             [[ -n "${ARTY_LICENSE:-}" ]] && hammer_cmd+=("--var" "project_license=${ARTY_LICENSE}")
 
+  # For landing page, use site_name instead of project_name in header
+            if [[ "$template" == "landing" ]] && [[ -n "${ARTY_NAME:-}" ]]; then
+              hammer_cmd+=("--var" "site_name=${ARTY_NAME}")
+            fi
+
   # Pass icon/logo filenames if paths provided (files will be copied later)
             if [[ -n "$icon_path" ]] && [[ -f "$icon_path" ]]; then
               local icon_filename
