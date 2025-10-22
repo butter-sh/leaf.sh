@@ -6,7 +6,9 @@ set -euo pipefail
 
 # Get script directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TEMPLATES_DIR="${SCRIPT_DIR}/templates"
+REAL_BASH_SOURCE="$(readlink -f "${BASH_SOURCE[0]}")"
+REAL_SCRIPT_DIR="$(cd "$(dirname "${REAL_BASH_SOURCE}")" && pwd)"
+TEMPLATES_DIR="${REAL_SCRIPT_DIR}/templates"
 
 # Colors for output
 export FORCE_COLOR=${FORCE_COLOR:-"1"}
@@ -31,8 +33,8 @@ find_hammer() {
     hammer_path="${HAMMER_SH}"
   elif [[ -x "${PWD}/.arty/bin/hammer" ]]; then
     hammer_path="${PWD}/.arty/bin/hammer"
-  elif [[ -x "${SCRIPT_DIR}/.arty/bin/hammer" ]]; then
-    hammer_path="${SCRIPT_DIR}/.arty/bin/hammer"
+  elif [[ -x "${REAL_SCRIPT_DIR}/.arty/bin/hammer" ]]; then
+    hammer_path="${REAL_SCRIPT_DIR}/.arty/bin/hammer"
   elif command -v hammer &>/dev/null; then
     hammer_path="hammer"
   else
