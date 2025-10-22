@@ -11,6 +11,7 @@
   --carbon-bg: #1a1a1a;
   --carbon-surface: #2c3e50;
   --carbon-surface-foreground: #e5e7eb;
+  --carbon-surface-forground-alt: rgba(134, 239, 172, 0.2);
 }
 
 /* Carbon texture background */
@@ -167,6 +168,10 @@
     padding: 0.125rem 0.375rem;
     border-radius: 0.25rem;
     border: 1px solid rgba(134, 239, 172, 0.2);
+}
+
+.prose h2, .prose h3, .prose h4, .prose strong {
+  color: var(--carbon-surface-forground-alt);
 }
 
 .prose > div > img {
