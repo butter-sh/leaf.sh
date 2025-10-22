@@ -1,0 +1,29 @@
+<!-- Scroll to Top Button -->
+<button id="scrollToTop" class="fixed bottom-8 right-8 p-4 rounded-full transition-all duration-300 opacity-0 pointer-events-none z-50" style="background: linear-gradient(135deg, var(--carbon-light) 0%, var(--carbon-light-dim) 100%); box-shadow: 0 4px 12px rgba(134, 239, 172, 0.4);">
+    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
+    </svg>
+</button>
+
+<script>
+    // Scroll to top button
+    const scrollToTopBtn = document.getElementById('scrollToTop');
+    if (scrollToTopBtn) {
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                scrollToTopBtn.style.opacity = '1';
+                scrollToTopBtn.style.pointerEvents = 'auto';
+            } else {
+                scrollToTopBtn.style.opacity = '0';
+                scrollToTopBtn.style.pointerEvents = 'none';
+            }
+        });
+
+        scrollToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    }
+</script>

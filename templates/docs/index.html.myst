@@ -173,11 +173,7 @@
     <!-- Hero Section -->
     <section class="py-20 px-4">
         <div class="max-w-7xl mx-auto text-center">
-{{#if icon}}
-            <div class="inline-block mb-8 animate-fade-in">
-                <img src="{{icon}}" alt="{{project_name}} icon" class="w-24 h-24 mx-auto">
-            </div>
-{{/if}}
+            {{> _hero_icon}}
             <h1 class="text-6xl font-bold mb-6 animate-fade-in" style="color: var(--carbon-light);">
                 {{project_name}}
             </h1>
@@ -233,12 +229,7 @@
 
     {{> _footer}}
 
-    <!-- Scroll to Top Button -->
-    <button id="scrollToTop" class="fixed bottom-8 right-8 p-4 rounded-full transition-all duration-300 opacity-0 pointer-events-none z-50" style="background: linear-gradient(135deg, var(--carbon-light) 0%, var(--carbon-light-dim) 100%); box-shadow: 0 4px 12px rgba(134, 239, 172, 0.4);">
-        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
-        </svg>
-    </button>
+    {{> _scroll_to_top}}
 
     <script>
         // List of source files to load

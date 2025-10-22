@@ -1,5 +1,5 @@
 name: "leaf.sh"
-version: "2.0.0"
+version: "1.0.0"
 description: "Beautiful documentation and landing page generator using hammer.sh templates"
 author: "valknar@pivoine.art"
 license: "MIT"

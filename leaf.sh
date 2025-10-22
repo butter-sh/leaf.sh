@@ -245,15 +245,17 @@ EOF
             fi
 
   # Add arty.yml values as variables (prefixed with project_)
-            [[ -n "${ARTY_NAME:-}" ]] && hammer_cmd+=("--var" "project_name=${ARTY_NAME}")
             [[ -n "${ARTY_VERSION:-}" ]] && hammer_cmd+=("--var" "project_version=${ARTY_VERSION}")
             [[ -n "${ARTY_DESCRIPTION:-}" ]] && hammer_cmd+=("--var" "project_description=${ARTY_DESCRIPTION}")
             [[ -n "${ARTY_AUTHOR:-}" ]] && hammer_cmd+=("--var" "project_author=${ARTY_AUTHOR}")
             [[ -n "${ARTY_LICENSE:-}" ]] && hammer_cmd+=("--var" "project_license=${ARTY_LICENSE}")
 
-  # For landing page, use site_name instead of project_name in header
+  # For landing page, use site_name; for docs, use project_name
             if [[ "$template" == "landing" ]] && [[ -n "${ARTY_NAME:-}" ]]; then
               hammer_cmd+=("--var" "site_name=${ARTY_NAME}")
+              hammer_cmd+=("--var" "project_name=${ARTY_NAME}")
+            elif [[ -n "${ARTY_NAME:-}" ]]; then
+              hammer_cmd+=("--var" "project_name=${ARTY_NAME}")
             fi
 
   # Pass icon/logo filenames if paths provided (files will be copied later)

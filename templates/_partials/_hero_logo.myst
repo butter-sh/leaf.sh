@@ -1,0 +1,5 @@
+{{#if logo}}
+<div class="flex justify-center mb-12 animate-fade-in">
+    <img src="{{logo}}" alt="{{project_name}} logo" class="h-32 w-auto" style="filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(1072%) hue-rotate(77deg) brightness(99%) contrast(92%);">
+</div>
+{{/if}}

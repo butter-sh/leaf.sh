@@ -25,12 +25,15 @@
             </div>
             <div class="flex items-center space-x-4">
 {{#if site_name}}
-                <a href="#projects" class="text-slate-300 hover:text-white transition" style="hover: color: var(--carbon-light);">Projects</a>
+                <a href="#projects" class="text-slate-300 hover:text-white transition scroll-smooth" style="hover: color: var(--carbon-light);">Projects</a>
 {{/if}}
+{{#unless site_name}}
 {{#if project_name}}
+                <a href="/" class="text-slate-300 hover:text-white transition" style="hover: color: var(--carbon-light);">Home</a>
                 <a href="#overview" class="text-slate-300 hover:text-white transition" style="hover: color: var(--carbon-light);">Overview</a>
                 <a href="#source" class="text-slate-300 hover:text-white transition">Source</a>
 {{/if}}
+{{/unless}}
 {{#if has_examples}}
                 <a href="#examples" class="text-slate-300 hover:text-white transition">Examples</a>
 {{/if}}
