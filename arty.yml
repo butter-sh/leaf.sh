@@ -1,14 +1,14 @@
 name: "leaf.sh"
-version: "1.0.0"
-description: "Beautiful documentation and landing page generator for arty.sh projects and butter.sh"
+version: "2.0.0"
+description: "Beautiful documentation and landing page generator using hammer.sh templates"
 author: "valknar@pivoine.art"
 license: "MIT"
 
 references:
-- https://github.com/butter-sh/clean.sh.git
-- https://github.com/butter-sh/leaf.sh.git
-- https://github.com/butter-sh/judge.sh.git
-- https://github.com/butter-sh/myst.sh.git
+  - https://github.com/butter-sh/hammer.sh.git
+  - https://github.com/butter-sh/myst.sh.git
+  - https://github.com/butter-sh/judge.sh.git
+  - https://github.com/butter-sh/clean.sh.git
 
 main: "leaf.sh"
 
@@ -20,4 +20,5 @@ scripts:
   test/setup: "arty exec judge setup"
   test/verbose: "arty exec judge run -v"
   test/ci: "TERM=linux arty exec judge run"
-  docs: BASE_PATH=leaf.sh arty exec leaf . --logo ./icon.svg -o ./docs
+  docs: "arty exec leaf docs -o ./docs --project-dir . --logo ./icon.svg --yes"
+  landing: "arty exec leaf landing -o ./index.html --projects ../projects.json --yes"

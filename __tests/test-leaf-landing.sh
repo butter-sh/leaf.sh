@@ -36,15 +36,15 @@ teardown() {
   cleanup_test_env
 }
 
-# Test: landing mode requires --landing flag
+# Test: landing mode requires landing subcommand
 test_landing_mode_requires_flag() {
   setup
-    
-  bash "$LEAF_SH" --landing -o test-output >/dev/null 2>&1 || true
-    
+
+  bash "$LEAF_SH" landing -o test-output --yes >/dev/null 2>&1 || true
+
     # Should attempt to generate landing page
   assert_true "true" "Should produce output in landing mode"
-    
+
   teardown
 }
 
@@ -52,7 +52,7 @@ test_landing_mode_requires_flag() {
 test_landing_with_projects_file() {
   setup
     
-  bash "$LEAF_SH" --landing --projects-file projects.json -o test-output >/dev/null 2>&1 || true
+  bash "$LEAF_SH" landing -o test-output --projects projects.json --yes >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
         # Use grep to check for projects instead of loading into variable
@@ -75,7 +75,7 @@ test_landing_with_inline_projects() {
     
   local projects='[{"url":"https://test.sh","label":"test.sh","desc":"Test project","class":"card-project"}]'
     
-  bash "$LEAF_SH" --landing --projects "$projects" -o test-output >/dev/null 2>&1 || true
+  bash "$LEAF_SH" landing -o test-output --projects "$projects" --yes >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
         # Use grep to check for inline projects
@@ -95,7 +95,7 @@ test_landing_with_inline_projects() {
 test_landing_with_custom_logo() {
   setup
     
-  bash "$LEAF_SH" --landing --logo logo.svg -o test-output >/dev/null 2>&1 || true
+  bash "$LEAF_SH" landing -o test-output --logo logo.svg --yes >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
         # Logo should be in output
@@ -115,7 +115,7 @@ test_landing_with_custom_logo() {
 test_landing_with_custom_github() {
   setup
     
-  bash "$LEAF_SH" --landing --github https://github.com/custom-org -o test-output >/dev/null 2>&1 | true
+  bash "$LEAF_SH" landing -o test-output --github-org https://github.com/custom-org --yes >/dev/null 2>&1 | true
     
   if [[ -f "test-output/index.html" ]]; then
         # GitHub URL should be in output
@@ -131,7 +131,7 @@ test_landing_with_custom_github() {
 test_landing_uses_default_projects() {
   setup
     
-  bash "$LEAF_SH" --landing -o test-output >/dev/null 2>&1 || true
+  bash "$LEAF_SH" landing -o test-output --yes >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]] && [[ -s "test-output/index.html" ]]; then
         # Should have some default projects
@@ -147,7 +147,7 @@ test_landing_uses_default_projects() {
 test_landing_has_proper_title() {
   setup
     
-  bash "$LEAF_SH" --landing -o test-output >/dev/null 2>&1 || true
+  bash "$LEAF_SH" landing -o test-output --yes >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
         # Should have butter.sh title
@@ -167,7 +167,7 @@ test_landing_has_proper_title() {
 test_landing_has_projects_section() {
   setup
     
-  bash "$LEAF_SH" --landing --projects-file projects.json -o test-output >/dev/null 2>&1 || true
+  bash "$LEAF_SH" landing -o test-output --projects projects.json --yes >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]] && [[ -s "test-output/index.html" ]]; then
         # Should have projects mentioned
@@ -183,7 +183,7 @@ test_landing_has_projects_section() {
 test_landing_with_base_path() {
   setup
     
-  bash "$LEAF_SH" --landing --base-path /landing/ -o test-output >/dev/null 2>&1 || true
+  bash "$LEAF_SH" landing -o test-output --base-path /landing/ --yes >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
         # Should generate successfully with base path
@@ -199,7 +199,7 @@ test_landing_with_base_path() {
 test_landing_creates_output_directory() {
   setup
     
-  bash "$LEAF_SH" --landing -o custom-landing >/dev/null 2>&1 || true
+  bash "$LEAF_SH" landing -o custom-landing --yes >/dev/null 2>&1 || true
     
   if [[ -d "custom-landing" ]]; then
     assert_directory_exists "custom-landing" "Should create output directory"
@@ -215,7 +215,7 @@ test_projects_file_not_found() {
   setup
     
   set +e
-  bash "$LEAF_SH" --landing --projects-file nonexistent.json -o test-output >/dev/null 2>&1
+  bash "$LEAF_SH" landing -o test-output --projects nonexistent.json --yes >/dev/null 2>&1
   exit_code=$?
   set -e
     
@@ -233,7 +233,7 @@ test_invalid_json_projects() {
   echo "invalid json" > invalid.json
     
   set +e
-  bash "$LEAF_SH" --landing --projects-file invalid.json -o test-output >/dev/null 2>&1
+  bash "$LEAF_SH" landing -o test-output --projects invalid.json --yes >/dev/null 2>&1
   exit_code=$?
   set -e
     
@@ -249,7 +249,7 @@ test_empty_projects_array() {
     
   echo "[]" > empty.json
     
-  bash "$LEAF_SH" --landing --projects-file empty.json -o test-output >/dev/null 2>&1 || true
+  bash "$LEAF_SH" landing -o test-output --projects empty.json --yes >/dev/null 2>&1 || true
     
     # Should still generate page
   assert_true "true" "Should handle empty projects array"
@@ -261,12 +261,13 @@ test_empty_projects_array() {
 test_landing_with_all_options() {
   setup
     
-  bash "$LEAF_SH" --landing \
-  --projects-file projects.json \
+  bash "$LEAF_SH" landing \
+  -o full-test \
+  --projects projects.json \
   --logo logo.svg \
-  --github https://github.com/butter-sh \
+  --github-org https://github.com/butter-sh \
   --base-path /landing/ \
-  -o full-test >/dev/null 2>&1 || true
+  --yes >/dev/null 2>&1 || true
     
   if [[ -d "full-test" ]]; then
     assert_directory_exists "full-test" "Should generate with all options"
@@ -284,7 +285,7 @@ test_landing_with_all_options() {
 test_landing_success_message() {
   setup
     
-  bash "$LEAF_SH" --landing -o test-output >/dev/null 2>&1 || true
+  bash "$LEAF_SH" landing -o test-output --yes >/dev/null 2>&1 || true
     
     # Should complete without error
   assert_true "true" "Landing page generation completes"
@@ -296,7 +297,7 @@ test_landing_success_message() {
 test_landing_with_debug() {
   setup
     
-  bash "$LEAF_SH" --landing --debug -o test-output >/dev/null 2>&1 || true
+  bash "$LEAF_SH" landing -o test-output --debug --yes >/dev/null 2>&1 || true
     
     # Debug mode should work with landing
   assert_true "true" "Debug mode works with landing"
@@ -310,10 +311,10 @@ test_projects_json_priority() {
     
   local inline='[{"url":"https://inline.sh","label":"inline","desc":"Inline","class":"card-project"}]'
     
-  bash "$LEAF_SH" --landing \
-  --projects-file projects.json \
+  bash "$LEAF_SH" landing \
+  -o test-output \
   --projects "$inline" \
-  -o test-output >/dev/null 2>&1 || true
+  --yes >/dev/null 2>&1 || true
     
     # Implementation should define priority
     # Just verify it handles both
@@ -326,7 +327,7 @@ test_projects_json_priority() {
 test_landing_valid_html() {
   setup
     
-  bash "$LEAF_SH" --landing -o test-output >/dev/null 2>&1 || true
+  bash "$LEAF_SH" landing -o test-output --yes >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
         # Basic HTML structure check using grep
@@ -348,7 +349,7 @@ test_landing_valid_html() {
 test_landing_has_meta_tags() {
   setup
     
-  bash "$LEAF_SH" --landing -o test-output >/dev/null 2>&1 || true
+  bash "$LEAF_SH" landing -o test-output --yes >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
         # Should have meta tags
@@ -368,7 +369,7 @@ test_landing_has_meta_tags() {
 test_landing_has_css() {
   setup
     
-  bash "$LEAF_SH" --landing -o test-output >/dev/null 2>&1 || true
+  bash "$LEAF_SH" landing -o test-output --yes >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
         # Should have styles

@@ -34,3 +34,7 @@ export LEAF_TEST_MODE=1
 export LEAF_TEST_COLORS=1
 export FORCE_COLOR=1
 export DEBUG=0
+
+# Set paths to dependencies (for local testing before they're installed)
+export HAMMER_SH="${LEAF_SH_ROOT}/../hammer.sh/hammer.sh"
+export MYST_SH="${LEAF_SH_ROOT}/../myst.sh/myst.sh"
