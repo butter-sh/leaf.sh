@@ -175,7 +175,9 @@
         <div class="max-w-5xl mx-auto">
             <div class="card-project p-8 md:p-12 rounded-2xl">
                 <h2 class="text-4xl font-bold mb-8" style="color: var(--carbon-light);">Overview</h2>
-                <div id="readmeContent" class="readme-prose"></div>
+                <div id="readmeContent" class="readme-prose">
+                    <p class="text-slate-400">Loading README...</p>
+                </div>
             </div>
         </div>
     </section>
@@ -186,7 +188,9 @@
             <h2 class="text-4xl font-bold mb-12 text-center" style="color: var(--carbon-light);">
                 Source Files
             </h2>
-            <div class="grid gap-6">{{{source_files_html}}}</div>
+            <div id="sourceFiles" class="grid gap-6">
+                <p class="text-slate-400 text-center">Loading source files...</p>
+            </div>
         </div>
     </section>
 
@@ -204,9 +208,80 @@
 
     {{> _footer}}
 
-    <!-- Store README content as JSON data -->
-    <script id="readmeData" type="application/json">{{{readme_content_json}}}</script>
-    
-    {{> _docs_scripts}}
+    <script>
+        // List of source files to load
+        const sourceFiles = {{{source_files_json}}};
+
+        // Load and render README
+        fetch('README.md')
+            .then(response => response.text())
+            .then(markdown => {
+                marked.setOptions({
+                    highlight: (code, lang) => {
+                        if (lang && hljs.getLanguage(lang)) {
+                            return hljs.highlight(code, { language: lang }).value;
+                        }
+                        return hljs.highlightAuto(code).value;
+                    }
+                });
+                document.getElementById('readmeContent').innerHTML = marked.parse(markdown);
+                hljs.highlightAll();
+            })
+            .catch(err => {
+                document.getElementById('readmeContent').innerHTML =
+                    '<p class="text-red-400">Failed to load README.md</p>';
+                console.error('Failed to load README:', err);
+            });
+
+        // Load and render source files
+        const sourceFilesContainer = document.getElementById('sourceFiles');
+        sourceFilesContainer.innerHTML = '';
+
+        sourceFiles.forEach(file => {
+            const fileDiv = document.createElement('div');
+            fileDiv.className = 'source-file card-project rounded-xl overflow-hidden';
+
+            const header = document.createElement('div');
+            header.className = 'source-file-header p-4 flex items-center justify-between cursor-pointer';
+            header.innerHTML = `
+                <div class="flex items-center space-x-3">
+                    <svg class="w-5 h-5" style="color: var(--carbon-light);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"/>
+                    </svg>
+                    <span class="font-semibold" style="color: var(--carbon-light);">${file}</span>
+                </div>
+                <svg class="chevron w-5 h-5" style="color: var(--carbon-light);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            `;
+
+            const content = document.createElement('div');
+            content.className = 'source-file-content';
+            content.innerHTML = '<pre class="m-0"><code class="language-bash">Loading...</code></pre>';
+
+            fileDiv.appendChild(header);
+            fileDiv.appendChild(content);
+            sourceFilesContainer.appendChild(fileDiv);
+
+            // Load source file via AJAX
+            fetch(`source/${file}`)
+                .then(response => response.text())
+                .then(code => {
+                    const highlighted = hljs.highlight(code, { language: 'bash' }).value;
+                    content.innerHTML = `<pre class="m-0"><code class="language-bash">${highlighted}</code></pre>`;
+                })
+                .catch(err => {
+                    content.innerHTML = '<pre class="m-0"><code class="text-red-400">Failed to load source file</code></pre>';
+                    console.error(`Failed to load ${file}:`, err);
+                });
+
+            // Toggle expand/collapse
+            header.addEventListener('click', () => {
+                fileDiv.classList.toggle('expanded');
+            });
+        });
+    </script>
+
+    {{> _common_scripts}}
 </body>
 </html>

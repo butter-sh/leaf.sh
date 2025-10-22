@@ -93,7 +93,7 @@ description: A project with special characters
 EOF
     
   (cd "project-with-special-chars" && \
-     bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
+  bash "$LEAF_SH" docs -o ../test-output --yes) >/dev/null 2>&1 || true
     
     # Should handle special characters
   assert_true "true" "Should handle special characters"
@@ -288,7 +288,8 @@ name: no-icon-project
 EOF
     
   (cd no-icon-project && \
-     bash "$LEAF_SH" docs -o ../test-output --logo /nonexistent/icon.svg --yes) >/dev/null 2>&1 || true
+     bash "$LEAF_SH" docs -o ../test-output --logo /nonexistent/icon.svg --yes) >/dev/null 2>&1 || \
+     true
     
     # Should use fallback icon
   assert_true "true" "Should handle missing icon"

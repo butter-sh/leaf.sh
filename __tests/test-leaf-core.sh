@@ -208,7 +208,8 @@ test_custom_logo_path() {
   echo '<svg></svg>' > logos/custom.svg
     
   (cd test-project && \
-     bash "$LEAF_SH" docs -o ../test-output --logo ../logos/custom.svg --yes) >/dev/null 2>&1 || true
+     bash "$LEAF_SH" docs -o ../test-output --logo ../logos/custom.svg --yes) >/dev/null 2>&1 || \
+     true
     
   if [[ -f "test-output/index.html" ]]; then
         # Use grep to check for svg content
@@ -246,7 +247,7 @@ test_base_path_option() {
   setup
     
   (cd test-project && \
-     bash "$LEAF_SH" docs -o ../test-output --base-path /docs/ --yes) >/dev/null 2>&1 || true
+  bash "$LEAF_SH" docs -o ../test-output --base-path /docs/ --yes) >/dev/null 2>&1 || true
     
   if [[ -f "test-output/index.html" ]]; then
     content=$(cat test-output/index.html)
@@ -262,7 +263,7 @@ test_github_url_option() {
   setup
     
   (cd test-project && \
-     bash "$LEAF_SH" docs -o ../test-output --github-url https://github.com/test/test --yes) >/dev/null 2>&1 | true
+  bash "$LEAF_SH" docs -o ../test-output --github-url https://github.com/test/test --yes) >/dev/null 2>&1 | true
     
   if [[ -f "test-output/index.html" ]]; then
     content=$(cat test-output/index.html)

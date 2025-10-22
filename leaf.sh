@@ -230,30 +230,30 @@ EOF
 
   # Add projects array for landing template
       if [[ "$template" == "landing" ]] && [[ -n "${ARTY_PROJECTS:-}" ]]; then
-        # Generate project cards HTML from JSON using the partial
-        local projects_html=""
-        local project_count=$(echo "$ARTY_PROJECTS" | jq 'length')
-        local partial_template="${TEMPLATES_DIR}/landing/partials/project-card.myst"
+        # Write projects JSON to a temp file and use hammer's --json flag
+        # Wrap the array in an object with "projects" key for myst.sh
+        local projects_file="/tmp/leaf-projects-$$.json"
+        echo "{\"projects\":$ARTY_PROJECTS}" > "$projects_file"
+        hammer_cmd+=("--json" "$projects_file")
+      fi
 
-        if [[ -f "$partial_template" ]]; then
-          for ((i=0; i<project_count; i++)); do
-            local url=$(echo "$ARTY_PROJECTS" | jq -r ".[$i].url // \"\"")
-            local label=$(echo "$ARTY_PROJECTS" | jq -r ".[$i].label // \"\"")
-            local desc=$(echo "$ARTY_PROJECTS" | jq -r ".[$i].desc // \"\"")
-            local tagline=$(echo "$ARTY_PROJECTS" | jq -r ".[$i].tagline // \"\"")
+  # Add source files for docs template
+      if [[ "$template" == "docs" ]]; then
+        # Find all .sh files in current directory (non-recursive, exclude hidden dirs)
+        local source_files=()
+        while IFS= read -r -d '' file; do
+          source_files+=("$(basename "$file")")
+        done < <(find . -maxdepth 1 -name "*.sh" -type f -print0 2>/dev/null)
 
-            # Render the partial with project variables
-            local card_html=$(cat "$partial_template" | \
-              sed "s|{{url}}|$url|g" | \
-              sed "s|{{label}}|$label|g" | \
-              sed "s|{{desc}}|$desc|g" | \
-              sed "s|{{tagline}}|$tagline|g")
+        # Generate JSON array of source filenames
+        local source_files_json="["
+        for i in "${!source_files[@]}"; do
+          source_files_json+="\"${source_files[$i]}\""
+          [[ $i -lt $((${#source_files[@]} - 1)) ]] && source_files_json+=","
+        done
+        source_files_json+="]"
 
-            projects_html+="$card_html"$'\n'
-          done
-        fi
-
-        hammer_cmd+=("--var" "projects_html=$projects_html")
+        hammer_cmd+=("--var" "source_files_json=$source_files_json")
       fi
 
   # Add user-provided variable arguments (these override arty.yml values)
@@ -266,6 +266,28 @@ EOF
       log_info "Command: ${hammer_cmd[*]}"
 
       if "${hammer_cmd[@]}"; then
+        # Post-process for docs template: copy README and source files
+        if [[ "$template" == "docs" ]]; then
+          log_info "Copying README and source files..."
+
+          # Copy README.md if it exists
+          if [[ -f "README.md" ]]; then
+            cp "README.md" "$output_dir/"
+            log_success "Copied README.md"
+          fi
+
+          # Create source directory and copy .sh files
+          if [[ ${#source_files[@]} -gt 0 ]]; then
+            mkdir -p "$output_dir/source"
+            for file in "${source_files[@]}"; do
+              if [[ -f "$file" ]]; then
+                cp "$file" "$output_dir/source/"
+                log_success "Copied $file"
+              fi
+            done
+          fi
+        fi
+
         log_success "Documentation generated successfully"
         log_info "Output: ${output_dir}"
         exit 0
