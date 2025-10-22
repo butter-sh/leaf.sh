@@ -3,10 +3,10 @@
         <div class="flex items-center justify-between h-16">
             <div class="flex items-center space-x-3">
 {{#if icon}}
-                <img src="{{icon}}" alt="Icon" class="w-10 h-10">
+                <img src="{{icon}}" alt="Icon" class="w-10 h-10" style="filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(1072%) hue-rotate(77deg) brightness(99%) contrast(92%);">
 {{/if}}
 {{#if logo}}
-                <img src="{{logo}}" alt="Logo" class="w-10 h-10">
+                <img src="{{logo}}" alt="Logo" class="w-10 h-10" style="filter: brightness(0) saturate(100%) invert(85%) sepia(15%) saturate(1072%) hue-rotate(77deg) brightness(99%) contrast(92%);">
 {{/if}}
                 <span class="text-xl font-bold" style="color: var(--carbon-light);">
 {{#if site_name}}

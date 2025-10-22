@@ -193,11 +193,13 @@
 
     <!-- Overview Section -->
     <section id="overview" class="py-16 px-4">
-        <div class="max-w-5xl mx-auto">
-            <div class="card-project p-8 md:p-12 rounded-2xl">
-                <h2 class="text-4xl font-bold mb-8" style="color: var(--carbon-light);">Overview</h2>
-                <div id="readmeContent" class="readme-prose">
-                    <p class="text-slate-400">Loading README...</p>
+        <div class="max-w-7xl mx-auto">
+            <div class="max-w-3xl mx-auto">
+                <div class="card-project p-8 md:p-12 rounded-2xl">
+                    <h2 class="text-4xl font-bold mb-8" style="color: var(--carbon-light);">Overview</h2>
+                    <div id="readmeContent" class="readme-prose">
+                        <p class="text-slate-400">Loading README...</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -233,8 +235,8 @@
 
     <!-- Scroll to Top Button -->
     <button id="scrollToTop" class="fixed bottom-8 right-8 p-4 rounded-full transition-all duration-300 opacity-0 pointer-events-none z-50" style="background: linear-gradient(135deg, var(--carbon-light) 0%, var(--carbon-light-dim) 100%); box-shadow: 0 4px 12px rgba(134, 239, 172, 0.4);">
-        <svg class="w-6 h-6 text-slate-900" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7"/>
         </svg>
     </button>
 
@@ -287,7 +289,7 @@
 
             const content = document.createElement('div');
             content.className = 'source-file-content';
-            content.innerHTML = '<pre class="m-0"><code class="language-bash">Loading...</code></pre>';
+            content.innerHTML = '<pre class="m-0 p-4"><code class="language-bash">Loading...</code></pre>';
 
             fileDiv.appendChild(header);
             fileDiv.appendChild(content);
@@ -298,7 +300,7 @@
                 .then(response => response.text())
                 .then(code => {
                     const highlighted = hljs.highlight(code, { language: 'bash' }).value;
-                    content.innerHTML = `<pre class="m-0"><code class="language-bash">${highlighted}</code></pre>`;
+                    content.innerHTML = `<pre class="m-0 p-4"><code class="language-bash">${highlighted}</code></pre>`;
                 })
                 .catch(err => {
                     content.innerHTML = '<pre class="m-0"><code class="text-red-400">Failed to load source file</code></pre>';
