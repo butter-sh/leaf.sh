@@ -10,23 +10,23 @@ export LEAF_SH="$LEAF_SH_ROOT/leaf.sh"
 
 # Debug: Print path (only if VERBOSE is set)
 if [[ "${VERBOSE:-0}" == "1" ]]; then
-    echo "[DEBUG test-config.sh] TEST_ROOT=$TEST_ROOT"
-    echo "[DEBUG test-config.sh] LEAF_SH_ROOT=$LEAF_SH_ROOT"
-    echo "[DEBUG test-config.sh] LEAF_SH=$LEAF_SH"
-    if [[ -f "$LEAF_SH" ]]; then
-        echo "[DEBUG test-config.sh] leaf.sh exists: YES"
-        echo "[DEBUG test-config.sh] leaf.sh executable: $(test -x "$LEAF_SH" && echo YES || echo NO)"
+  echo "[DEBUG test-config.sh] TEST_ROOT=$TEST_ROOT"
+  echo "[DEBUG test-config.sh] LEAF_SH_ROOT=$LEAF_SH_ROOT"
+  echo "[DEBUG test-config.sh] LEAF_SH=$LEAF_SH"
+  if [[ -f "$LEAF_SH" ]]; then
+    echo "[DEBUG test-config.sh] leaf.sh exists: YES"
+    echo "[DEBUG test-config.sh] leaf.sh executable: $(test -x "$LEAF_SH" && echo YES || echo NO)"
     else
-        echo "[DEBUG test-config.sh] leaf.sh exists: NO"
-    fi
+    echo "[DEBUG test-config.sh] leaf.sh exists: NO"
+  fi
 fi
 
 # Verify leaf.sh exists
 if [[ ! -f "$LEAF_SH" ]]; then
-    echo "ERROR: leaf.sh not found at: $LEAF_SH" >&2
-    echo "TEST_ROOT: $TEST_ROOT" >&2
-    echo "LEAF_SH_ROOT: $LEAF_SH_ROOT" >&2
-    exit 1
+  echo "ERROR: leaf.sh not found at: $LEAF_SH" >&2
+  echo "TEST_ROOT: $TEST_ROOT" >&2
+  echo "LEAF_SH_ROOT: $LEAF_SH_ROOT" >&2
+  exit 1
 fi
 
 # Test behavior flags
