@@ -1,5 +1,4 @@
 * {
-  font-family: 'Roboto', system-ui, sans-serif;
   margin: 0;
   padding: 0;
   box-sizing: border-box;
@@ -144,6 +143,14 @@
 }
 .source-file.expanded .chevron {
     transform: rotate(180deg);
+}
+
+.source-file-content > pre {
+  max-height: 600px;
+}
+
+.source-file-content:hover > pre {
+  overflow: scroll;
 }
 
 .prose a {

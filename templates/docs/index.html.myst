@@ -7,10 +7,9 @@
   <meta name="description" content="{{project_description}}">
 
   {{> _head}}
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/base16-material-palenight.min.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/highlightjs-line-numbers.js/2.9.0/highlightjs-line-numbers.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/styles/tokyo-night-dark.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.11.1/languages/bash.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body class="carbon-bg min-h-screen text-slate-100">
@@ -137,7 +136,6 @@
                 .then(response => response.text())
                 .then(code => {
                     const highlighted = hljs.highlight(code, { language: 'bash' }).value;
-                    hljs.lineNumbersBlock(highlighted);
                     content.innerHTML = `<pre class="m-0 p-4"><code class="language-bash">${highlighted}</code></pre>`;
                 })
                 .catch(err => {
