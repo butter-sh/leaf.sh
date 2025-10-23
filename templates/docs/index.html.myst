@@ -137,6 +137,7 @@
                 .then(response => response.text())
                 .then(code => {
                     const highlighted = hljs.highlight(code, { language: 'bash' }).value;
+                    hljs.lineNumbersBlock(highlighted);
                     content.innerHTML = `<pre class="m-0 p-4"><code class="language-bash">${highlighted}</code></pre>`;
                 })
                 .catch(err => {
