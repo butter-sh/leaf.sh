@@ -11,7 +11,7 @@
   --carbon-bg: #1a1a1a;
   --carbon-surface: #2c3e50;
   --carbon-surface-foreground: #e5e7eb;
-  --carbon-surface-forground-alt: rgba(134, 239, 172, 0.2);
+  --carbon-surface-forground-alt: rgba(134, 239, 172, 0.5);
 }
 
 /* Carbon texture background */
@@ -41,7 +41,7 @@
 /* Project/Content cards */
 .card-project {
   background: rgba(44, 62, 80, 0.6);
-  border: 1px solid rgba(134, 239, 172, 0.5);
+  border: 1px solid rgba(134, 239, 172, 0.2);
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
 }
